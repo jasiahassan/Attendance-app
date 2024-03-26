@@ -16,7 +16,6 @@ const usersSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role",
   },
-
   password: {
     type: String,
     minlength: 6,
@@ -27,6 +26,9 @@ const usersSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordRestExpires: Date,
 });
 
 usersSchema.pre("save", async function (next) {
@@ -36,8 +38,6 @@ usersSchema.pre("save", async function (next) {
   //hash the password with cost of 10
   this.password = await bcrypt.hash(this.password, 10);
 
-  //delete confirmpassword field
-  this.passwordConfirm = undefined;
   next();
 });
 

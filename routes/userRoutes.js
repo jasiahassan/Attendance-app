@@ -2,8 +2,29 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
+const uploadPhotos = require("../utils/uploadUsingMulter");
 
-router.post("/adduser", authController.protect, userController.createUser);
+router.post(
+  "/adduser",
+  authController.protect,
+  uploadPhotos.uploadUserPhotos,
+  userController.createUser
+);
 router.post("/login", userController.loginUser);
+router.patch(
+  "/updateUser/:id",
+  authController.protect,
+  uploadPhotos.uploadUserPhotos,
+  userController.updateUser
+);
+router.delete(
+  "/deleteUser/:id",
+  authController.protect,
+  userController.deleteUser
+);
+router.get("/getUser/:id", authController.protect, userController.getUser);
+router.post("/getAllUsers", authController.protect, userController.getAllUsers);
+router.post("/getCount", authController.protect, userController.getCount);
+router.post("/getRoles", authController.protect, userController.getRoles);
 
 module.exports = router;

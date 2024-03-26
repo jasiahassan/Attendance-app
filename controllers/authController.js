@@ -55,14 +55,3 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
-
-exports.checkAdmin = catchAsync(async (req, res, next) => {
-  if (req.user.role === "admin") {
-    next();
-  } else {
-    return res.status(400).json({
-      status: "Fail",
-      message: " Yor are not authorised to perform this task",
-    });
-  }
-});
