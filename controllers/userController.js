@@ -128,6 +128,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
       console.error(`no photo found`);
     }
   }
+  console.log(updatingUser);
   const profile = await Profile.findByIdAndUpdate(
     req.params.id,
     {
