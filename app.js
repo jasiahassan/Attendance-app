@@ -11,7 +11,7 @@ const globalErrorHandler = require("./controllers/errorController");
 require("./controllers/seeding");
 dotenv.config({ path: "./config.env" });
 mongoose
-  .connect("mongodb://0.0.0.0:27017/attendance")
+  .connect(process.env.DATABASE)
   .then(() => console.log("DB connection successful"));
 
 app.use(express.json());
