@@ -23,8 +23,8 @@ router.delete(
   userController.deleteUser
 );
 router.get("/getUser/:id", authController.protect, userController.getUser);
-router.post("/getAllUsers", authController.protect, userController.getAllUsers);
-router.post("/getCount", authController.protect, userController.getCount);
-router.post("/getRoles", authController.protect, userController.getRoles);
+router.get("/getAllUsers", authController.protect, userController.getAllUsers);
+router.get("/getCount", authController.protect, userController.getCount);
+router.get("/getRoles", authController.protect, userController.getRoles);
 
 module.exports = router;

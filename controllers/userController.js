@@ -89,7 +89,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       PhoneNumber: req.body.phoneNumber,
       address: req.body.address,
-      image: req.body.image,
+      image: req.file.path,
       userId: user._id,
     });
     await profile.save();
