@@ -22,7 +22,7 @@ router.delete(
   authController.protect,
   userController.deleteUser
 );
-router.get("/getUser/:id", authController.protect, userController.getUser);
+router.get("/getUser", authController.protect, userController.getUser);
 router.get("/getAllUsers", authController.protect, userController.getAllUsers);
 router.get("/getCount", authController.protect, userController.getCount);
 router.get("/getRoles", authController.protect, userController.getRoles);

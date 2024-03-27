@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Attendance = require("../models/attendanceModel");
+const apiFeatures = require("../utils/APIFeatures");
 
 exports.checkin = catchAsync(async (req, res, next) => {
   const currentDate = new Date();
@@ -48,7 +49,18 @@ exports.checkin = catchAsync(async (req, res, next) => {
   }
 });
 exports.getAttendance = catchAsync(async (req, res, next) => {
-  const attendance = await Attendance.find({ userId: req.user._id });
+  const features = new apiFeatures(
+    Attendance.find({ userId: req.user._id }),
+    req.query
+  )
+    .filter()
+    .search();
+
+  const attendance = await features.query;
+
+  if (attendance.length == 0) {
+    return next(new AppError("no attendance found for this user", 404));
+  }
   res.status(200).json({
     status: "success",
     data: {

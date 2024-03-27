@@ -10,7 +10,7 @@ const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await Profile.findById(req.params.id).populate({
+  const user = await Profile.findById(req.user._id).populate({
     path: "userId",
     select: ["-_id", "-__v"],
   });
@@ -89,7 +89,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       PhoneNumber: req.body.phoneNumber,
       address: req.body.address,
-      image: req.file.path,
+      image: req.body.path,
       userId: user._id,
     });
     await profile.save();
@@ -112,14 +112,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  if (req.body.password) {
-    return next(
-      new AppError(
-        "this route is not for password updates. please use updatePassword",
-        400
-      )
-    );
-  }
   const updatingUser = await Profile.findById(req.params.id);
   if (updatingUser.image) {
     try {
@@ -128,7 +120,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
       console.error(`no photo found`);
     }
   }
-  console.log(updatingUser);
+
   const profile = await Profile.findByIdAndUpdate(
     req.params.id,
     {
