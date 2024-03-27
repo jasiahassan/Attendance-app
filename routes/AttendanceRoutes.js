@@ -5,7 +5,7 @@ const authController = require("../controllers/authController");
 const attendanceController = require("../controllers/attendanceController");
 
 router.post("/checkin", authController.protect, attendanceController.checkin);
-router.post(
+router.get(
   "/getAttendance",
   authController.protect,
   attendanceController.getAttendance
