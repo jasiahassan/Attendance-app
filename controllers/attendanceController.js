@@ -48,12 +48,11 @@ exports.checkin = catchAsync(async (req, res, next) => {
   }
 });
 exports.getAttendance = catchAsync(async (req, res, next) => {
-  const attendance = await Attendance.find({ userId: req.user._id })
-    .res.status(200)
-    .json({
-      status: "success",
-      data: {
-        attendance,
-      },
-    });
+  const attendance = await Attendance.find({ userId: req.user._id });
+  res.status(200).json({
+    status: "success",
+    data: {
+      attendance,
+    },
+  });
 });
