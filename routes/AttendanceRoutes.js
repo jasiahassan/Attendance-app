@@ -5,9 +5,10 @@ const authController = require("../controllers/authController");
 const attendanceController = require("../controllers/attendanceController");
 
 router.post("/checkin", authController.protect, attendanceController.checkin);
-router.patch(
-  "/checkout",
+router.post(
+  "/getAttendance",
   authController.protect,
-  attendanceController.checkout
+  attendanceController.getAttendance
 );
+
 module.exports = router;

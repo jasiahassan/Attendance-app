@@ -89,7 +89,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       PhoneNumber: req.body.phoneNumber,
       address: req.body.address,
-      image: req.file.path,
+      image: req.body.image,
       userId: user._id,
     });
     await profile.save();
@@ -101,7 +101,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       },
     });
   } catch (error) {
-    await unlinkAsync(req.file.path);
+    // await unlinkAsync(req.file.path);
     if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
       return res.status(400).json({
         status: "error",
