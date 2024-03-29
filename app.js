@@ -7,23 +7,12 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
-const { initializeApp } = require("firebase/app");
 require("./controllers/seeding");
 
 dotenv.config({ path: "./config.env" });
 mongoose
   .connect(process.env.DATABASE)
   .then(() => console.log("DB connection successful"));
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAvNhucRxF6jT0B5iUOAVHmiW7yVsan9Bk",
-  authDomain: "attendance-app-90eb5.firebaseapp.com",
-  projectId: "attendance-app-90eb5",
-  storageBucket: "attendance-app-90eb5.appspot.com",
-  messagingSenderId: "17104516802",
-  appId: "1:17104516802:web:0e31f7f5a95c51f94fad5b",
-};
-exports.firebaseapp = initializeApp(firebaseConfig);
 
 app.use(express.json());
 app.use(cors());
