@@ -7,14 +7,14 @@ const uploadPhotos = require("../utils/uploadUsingMulter");
 router.post(
   "/adduser",
   authController.protect,
-  uploadPhotos.uploadUserPhotos,
+  // uploadPhotos.uploadUserPhotos,
   userController.createUser
 );
 router.post("/login", userController.loginUser);
 router.patch(
   "/updateUser/:id",
   authController.protect,
-  uploadPhotos.uploadUserPhotos,
+  // uploadPhotos.uploadUserPhotos,
   userController.updateUser
 );
 router.delete(
@@ -22,6 +22,7 @@ router.delete(
   authController.protect,
   userController.deleteUser
 );
+
 router.get("/getUser", authController.protect, userController.getUser);
 router.get("/getAllUsers", authController.protect, userController.getAllUsers);
 router.get("/getCount", authController.protect, userController.getCount);

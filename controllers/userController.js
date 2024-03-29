@@ -89,7 +89,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       lastName: req.body.lastName,
       PhoneNumber: req.body.phoneNumber,
       address: req.body.address,
-      image: req.body.path,
+      // image: req.body.path,
       userId: user._id,
     });
     await profile.save();
@@ -120,16 +120,16 @@ exports.updateUser = catchAsync(async (req, res, next) => {
       console.error(`no photo found`);
     }
   }
-
   const profile = await Profile.findByIdAndUpdate(
     req.params.id,
-    {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      PhoneNumber: req.body.phoneNumber,
-      address: req.body.address,
-      image: req.file.path,
-    },
+    req.body,
+    // {
+    //   // firstName: req.body.firstName,
+    //   // lastName: req.body.lastName,
+    //   // PhoneNumber: req.body.phoneNumber,
+    //   // address: req.body.address,
+    //   // image: req.file.path,
+    // },
     {
       new: true,
       runValidators: true,
@@ -137,10 +137,11 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   );
   const user = await User.findByIdAndUpdate(
     profile.userId,
-    {
-      email: req.body.email,
-      password: req.body.password,
-    },
+    req.body,
+    // {
+    //   email: req.body.email,
+    //   password: req.body.password,
+    // },
     {
       new: true,
       runValidators: true,
