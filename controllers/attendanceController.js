@@ -68,3 +68,21 @@ exports.getAttendance = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getAllAttendance = catchAsync(async (req, res, next) => {
+  const features = new apiFeatures(Attendance.find(), req.query)
+    .filter()
+    .search();
+
+  const attendance = await features.query;
+
+  if (attendance.length == 0) {
+    return next(new AppError("no attendance found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      attendance,
+    },
+  });
+});

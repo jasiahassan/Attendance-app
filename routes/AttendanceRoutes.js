@@ -10,5 +10,10 @@ router.get(
   authController.protect,
   attendanceController.getAttendance
 );
+router.get(
+  "/getAllAttendance",
+  authController.protect,
+  attendanceController.getAllAttendance
+);
 
 module.exports = router;
