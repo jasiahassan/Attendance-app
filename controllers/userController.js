@@ -1,7 +1,4 @@
 const User = require("../models/userModel");
-const fs = require("fs");
-const { promisify } = require("util");
-const unlinkAsync = promisify(fs.unlink);
 const catchAsync = require("../utils/catchAsync");
 const { signToken } = require("./authController");
 const AppError = require("../utils/appError");
@@ -25,7 +22,9 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(Profile.find(), req.query).filter().search();
+  const features = new apiFeatures(Profile.find().populate("userId"), req.query)
+    .filter()
+    .search();
 
   const users = await features.query;
 
@@ -83,15 +82,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
       roleId: req.body.roleId,
     });
     await user.save();
-
-    const profile = new Profile({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      PhoneNumber: req.body.phoneNumber,
-      address: req.body.address,
-      // image: req.body.path,
-      userId: user._id,
-    });
+    const profile = new Profile({ ...req.body, userId: user._id });
     await profile.save();
     res.status(200).json({
       status: "success",
@@ -101,7 +92,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
       },
     });
   } catch (error) {
-    // await unlinkAsync(req.file.path);
     if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
       return res.status(400).json({
         status: "error",
@@ -112,41 +102,14 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const updatingUser = await Profile.findById(req.params.id);
-  if (updatingUser.image) {
-    try {
-      await unlinkAsync(updatingUser.image);
-    } catch (err) {
-      console.error(`no photo found`);
-    }
-  }
-  const profile = await Profile.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    // {
-    //   // firstName: req.body.firstName,
-    //   // lastName: req.body.lastName,
-    //   // PhoneNumber: req.body.phoneNumber,
-    //   // address: req.body.address,
-    //   // image: req.file.path,
-    // },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
-  const user = await User.findByIdAndUpdate(
-    profile.userId,
-    req.body,
-    // {
-    //   email: req.body.email,
-    //   password: req.body.password,
-    // },
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const profile = await Profile.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  const user = await User.findByIdAndUpdate(profile.userId, req.body, {
+    new: true,
+    runValidators: true,
+  });
   if (!user) {
     return next(new AppError("no user found with this id", 404));
   }

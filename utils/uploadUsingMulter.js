@@ -1,6 +1,5 @@
 const multer = require("multer");
-const express = require("express");
-const router = express.Router();
+const crypto = require("crypto");
 const { initializeApp } = require("firebase/app");
 const {
   getStorage,
@@ -19,47 +18,74 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
+
 const storage = getStorage();
-
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/users");
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `user-${Date.now()}.${ext}`);
-  },
-});
-
-const multerFilter = (req, file, cb) => {
-  const storageRef = ref(storage, `files/${req.file.originalname}`);
-  if (file.mimetype.startsWith("image")) {
-    cb(null, true);
-  } else {
-    cb(new AppError("not an image!please upload only images", 400), false);
-  }
-};
 
 const upload = multer({
   storage: multer.memoryStorage(),
 });
-router.post("./upload", upload.single("image")),
-  (req, res) => {
-    if (!req.file) {
-      return res.status(400).send("no file uploaded");
-    }
-    const storageref = ref(storage, req.file.originalname);
-    const metadata = {
-      contentType: "image/jpg",
-    };
-    uploadBytes(storageref, req.file.buffer, metadata).then(() => {
+
+const uploadImage = (req, res, next) => {
+  upload.single("image")(req, res, (err) => {
+    next();
+  });
+};
+
+const uploadImageToFirebase = (req, res, next) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded");
+  }
+
+  const randomId = crypto.randomBytes(2).toString("hex");
+
+  const originalFilename = req.file.originalname;
+  const fileExtension = originalFilename.split(".").pop();
+
+  const newFilename = `${originalFilename}_${randomId}.${fileExtension}`;
+
+  const storageref = ref(storage, newFilename);
+  const metadata = {
+    contentType: "image/*",
+  };
+
+  uploadBytes(storageref, req.file.buffer, metadata)
+    .then(() => {
       getDownloadURL(storageref)
         .then((url) => {
-          res.send({ url });
+          req.body.image = url;
+          next();
         })
         .catch((err) => {
           console.log(err);
           res.status(500).send(err);
         });
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send(err);
     });
-  };
+};
+
+module.exports = { uploadImage, uploadImageToFirebase };
+
+// app.post("/upload", upload.single("image"), (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).send("no file uploaded");
+//   }
+//   const storageref = ref(storage, req.file.originalname);
+//   const metadata = {
+//     contentType: "image/jpg",
+//   };
+//   uploadBytes(storageref, req.file.buffer, metadata).then(() => {
+//     getDownloadURL(storageref)
+//       .then((url) => {
+//         res.send({ url });
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//         res.status(500).send(err);
+//       });
+//   });
+// });
+
+//

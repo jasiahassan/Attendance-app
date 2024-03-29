@@ -11,7 +11,7 @@ const profileSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  PhoneNumber: {
+  phoneNumber: {
     type: Number,
   },
   image: {

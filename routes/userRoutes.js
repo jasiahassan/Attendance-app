@@ -7,14 +7,16 @@ const uploadPhotos = require("../utils/uploadUsingMulter");
 router.post(
   "/adduser",
   authController.protect,
-  // uploadPhotos.uploadUserPhotos,
+  uploadPhotos.uploadImage,
+  uploadPhotos.uploadImageToFirebase,
   userController.createUser
 );
 router.post("/login", userController.loginUser);
 router.patch(
   "/updateUser/:id",
   authController.protect,
-  // uploadPhotos.uploadUserPhotos,
+  uploadPhotos.uploadImage,
+  uploadPhotos.uploadImageToFirebase,
   userController.updateUser
 );
 router.delete(
