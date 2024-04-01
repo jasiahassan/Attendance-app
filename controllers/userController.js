@@ -75,7 +75,6 @@ exports.getRoles = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  // try {
   const user = new User({
     email: req.body.email,
     password: req.body.password,
@@ -96,14 +95,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
       profile,
     },
   });
-  // } catch (error) {
-  //   if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-  //     return res.status(400).json({
-  //       status: "error",
-  //       message: "Email already exists. Please use a different email address.",
-  //     });
-  //   }
-  // }
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
@@ -128,13 +119,18 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, { active: "false" });
+  const user = await User.findByIdAndUpdate(req.params.id, {
+    active: "false",
+  });
   if (!user) {
     return next(new AppError("no user found with this id", 404));
   }
   res.status(200).json({
     status: "success",
     message: "user deleted",
+    data: {
+      user,
+    },
   });
 });
 

@@ -20,7 +20,7 @@ router.patch(
   uploadPhotos.uploadImageToFirebase,
   userController.updateUser
 );
-router.delete(
+router.patch(
   "/deleteUser/:id",
   authController.protect,
   userController.deleteUser

@@ -7,7 +7,7 @@ const seedAdmin = async () => {
     const user = await User.findOne({ roleId: admin._id });
     if (!user) {
       const newAdmin = new User({
-        email: "jasia@gmail.com",
+        email: "amirbashir@gmail.com",
         password: "123456789",
         roleId: admin._id,
       });

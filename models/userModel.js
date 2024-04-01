@@ -46,10 +46,10 @@ usersSchema.pre("save", function (next) {
   next();
 });
 
-usersSchema.pre(/^find/, function (next) {
-  this.find({ active: { $ne: false } });
-  next();
-});
+// usersSchema.pre(/^find/, function (next) {
+//   this.find({ active: { $ne: false } });
+//   next();
+// });
 
 usersSchema.methods.correctPassword = async function (
   candidatePassword,

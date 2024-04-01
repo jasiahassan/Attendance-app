@@ -2,15 +2,17 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Attendance = require("../models/attendanceModel");
 const apiFeatures = require("../utils/APIFeatures");
+const Profile = require("../models/profileModel");
 
 exports.checkin = catchAsync(async (req, res, next) => {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
+  const user = await Profile.findOne({ userId: req.user._id });
 
   const existingCheckin = await Attendance.findOne({
-    userId: req.user._id,
+    userId: user._id,
     in: {
       $gte: currentDate,
       $lte: endOfDay,
@@ -19,7 +21,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
 
   if (!existingCheckin) {
     const newCheckin = new Attendance({
-      userId: req.user._id,
+      userId: user._id,
       in: Date.now(),
     });
     newCheckin.save();
@@ -74,7 +76,10 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     .filter()
     .search();
 
-  const attendance = await features.query;
+  const attendance = await features.query.populate(
+    "userId",
+    "firstName lastName"
+  );
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));

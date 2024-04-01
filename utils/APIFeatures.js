@@ -19,7 +19,10 @@ class apiFeatures {
     if (this.queryString.search) {
       const regex = new RegExp(this.queryString.search, "i");
       this.query = this.query.find({
-        $or: [{ email: { $regex: regex } }],
+        $or: [
+          { firstName: { $regex: regex } },
+          { lastName: { $regex: regex } },
+        ],
       });
     }
     return this;

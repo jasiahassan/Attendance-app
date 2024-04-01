@@ -15,9 +15,15 @@ router.get(
   leaveController.getAllLeaves
 );
 router.delete(
-  "/deleteLeave",
+  "/deleteLeave/:id",
   authController.protect,
   leaveController.deleteLeave
+);
+
+router.patch(
+  "/updateLeave/:id",
+  authController.protect,
+  leaveController.updateLeave
 );
 router.patch(
   "/approveLeave/:id",
