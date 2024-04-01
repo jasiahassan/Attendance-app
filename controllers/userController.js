@@ -75,30 +75,35 @@ exports.getRoles = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  try {
-    const user = new User({
-      email: req.body.email,
-      password: req.body.password,
-      roleId: req.body.roleId,
-    });
-    await user.save();
-    const profile = new Profile({ ...req.body, userId: user._id });
-    await profile.save();
-    res.status(200).json({
-      status: "success",
-      data: {
-        user,
-        profile,
-      },
-    });
-  } catch (error) {
-    if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-      return res.status(400).json({
-        status: "error",
-        message: "Email already exists. Please use a different email address.",
-      });
-    }
-  }
+  // try {
+  const user = new User({
+    email: req.body.email,
+    password: req.body.password,
+    roleId: req.body.roleId,
+  });
+  console.log(req.body);
+  const profile = new Profile({
+    ...req.body,
+    userId: user._id,
+  });
+
+  await user.save();
+  await profile.save();
+  res.status(200).json({
+    status: "success",
+    data: {
+      user,
+      profile,
+    },
+  });
+  // } catch (error) {
+  //   if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+  //     return res.status(400).json({
+  //       status: "error",
+  //       message: "Email already exists. Please use a different email address.",
+  //     });
+  //   }
+  // }
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {

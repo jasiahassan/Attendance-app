@@ -3,12 +3,13 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 const uploadPhotos = require("../utils/uploadUsingMulter");
+const { auth } = require("firebase-admin");
 
 router.post(
   "/adduser",
   authController.protect,
-  uploadPhotos.uploadImage,
-  uploadPhotos.uploadImageToFirebase,
+  // uploadPhotos.uploadImage,
+  // uploadPhotos.uploadImageToFirebase,
   userController.createUser
 );
 router.post("/login", userController.loginUser);

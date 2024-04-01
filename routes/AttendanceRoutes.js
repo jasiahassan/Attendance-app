@@ -16,4 +16,10 @@ router.get(
   attendanceController.getAllAttendance
 );
 
+router.patch(
+  "/approve/:id",
+  authController.protect,
+  attendanceController.approveAttendance
+);
+
 module.exports = router;
