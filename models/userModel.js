@@ -25,6 +25,12 @@ const usersSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordRestExpires: Date,

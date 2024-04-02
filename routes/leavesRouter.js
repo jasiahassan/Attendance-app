@@ -12,8 +12,10 @@ router.post(
 router.get(
   "/getAllLeaves",
   authController.protect,
+  authController.restrictTo("Admin"),
   leaveController.getAllLeaves
 );
+router.get("/getLeaves", authController.protect, leaveController.getLeaves);
 router.delete(
   "/deleteLeave/:id",
   authController.protect,
@@ -28,6 +30,7 @@ router.patch(
 router.patch(
   "/approveLeave/:id",
   authController.protect,
+  authController.restrictTo("Admin"),
   leaveController.approveLeave
 );
 

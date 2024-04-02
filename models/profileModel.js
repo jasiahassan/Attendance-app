@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const profileSchema = new mongoose.Schema({
+  empId: {
+    type: Number,
+  },
   firstName: {
     type: String,
   },
@@ -19,6 +22,12 @@ const profileSchema = new mongoose.Schema({
   },
   address: {
     type: String,
+  },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
   },
 });
 

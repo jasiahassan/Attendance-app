@@ -15,6 +15,12 @@ const leaveSchema = new mongoose.Schema({
     type: Boolean,
     default: "false",
   },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
 const Leave = mongoose.model("Leave", leaveSchema);

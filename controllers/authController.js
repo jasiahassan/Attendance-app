@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
+const Role = require("../models/roleModel");
 
 exports.signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -24,7 +25,6 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError("you are not logged in please login to get access", 401)
     );
   }
-  //verify token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   //check if user still exists
   const freshUser = await User.findById(decoded.id);
@@ -45,13 +45,39 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+// exports.restrictTo = (...roles) => {
+//   return async (req, res, next) => {
+//     console.log("role");
+//     if (!roles.includes(req.user.roleId)) {
+//       return next(
+//         new AppError("you do not have permission to perform this action", 403)
+//       );
+//     }
+//     next();
+//   };
+// };
+
 exports.restrictTo = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError("you do not have permission to perform this action", 403)
-      );
+  return async (req, res, next) => {
+    try {
+      for (const role of roles) {
+        const reqUser = await Role.find({ role: role }).distinct("_id");
+        const reqUserStrings = reqUser.map((objId) => objId.toString());
+
+        const roleIdString = req.user.roleId.toString();
+
+        if (!reqUserStrings.includes(roleIdString)) {
+          return next(
+            new AppError(
+              "You do not have permission to perform this action",
+              403
+            )
+          );
+        }
+      }
+      next();
+    } catch (err) {
+      return next(err);
     }
-    next();
   };
 };

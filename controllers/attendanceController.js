@@ -23,6 +23,8 @@ exports.checkin = catchAsync(async (req, res, next) => {
     const newCheckin = new Attendance({
       userId: user._id,
       in: Date.now(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
     newCheckin.save();
     return res.status(200).json({
@@ -34,6 +36,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
   }
   if (!existingCheckin.out) {
     existingCheckin.out = Date.now();
+    existingCheckin.updatedAt = Date.now();
     existingCheckin.save();
     return res.status(200).json({
       status: "success",
@@ -50,18 +53,37 @@ exports.checkin = catchAsync(async (req, res, next) => {
     });
   }
 });
+// exports.getAttendance = catchAsync(async (req, res, next) => {
+//   const features = new apiFeatures(
+//     Attendance.find({ userId: req.user._id }),
+//     req.query
+//   )
+//     .filter()
+//     .search();
+
+//   const attendance = await features.query;
+
+//   if (attendance.length == 0) {
+//     return next(new AppError("no attendance found for this user", 404));
+//   }
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       attendance,
+//     },
+//   });
+// });
+
 exports.getAttendance = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(
-    Attendance.find({ userId: req.user._id }),
-    req.query
-  )
-    .filter()
-    .search();
-
-  const attendance = await features.query;
-
+  const myAttendance = await Profile.find({ userId: req.user._id }).distinct(
+    "_id"
+  );
+  const attendance = await Attendance.find({ userId: myAttendance }).populate(
+    "userId",
+    "firstName lastName"
+  );
   if (attendance.length == 0) {
-    return next(new AppError("no attendance found for this user", 404));
+    return next(new AppError("no attendance found", 404));
   }
   res.status(200).json({
     status: "success",

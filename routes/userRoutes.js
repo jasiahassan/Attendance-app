@@ -3,11 +3,11 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 const uploadPhotos = require("../utils/uploadUsingMulter");
-const { auth } = require("firebase-admin");
 
 router.post(
   "/adduser",
   authController.protect,
+  authController.restrictTo("Admin"),
   uploadPhotos.uploadImage,
   uploadPhotos.uploadImageToFirebase,
   userController.createUser
@@ -23,12 +23,23 @@ router.patch(
 router.delete(
   "/deleteUser/:id",
   authController.protect,
+  authController.restrictTo("Admin"),
   userController.deleteUser
 );
 
 router.get("/getUser", authController.protect, userController.getUser);
-router.get("/getAllUsers", authController.protect, userController.getAllUsers);
-router.get("/getCount", authController.protect, userController.getCount);
+router.get(
+  "/getAllUsers",
+  authController.protect,
+  authController.restrictTo("Admin"),
+  userController.getAllUsers
+);
+router.get(
+  "/getCount",
+  authController.protect,
+  authController.restrictTo("Admin"),
+  userController.getCount
+);
 router.get("/getRoles", authController.protect, userController.getRoles);
 
 module.exports = router;

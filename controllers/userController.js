@@ -79,11 +79,15 @@ exports.createUser = catchAsync(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     roleId: req.body.roleId,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   });
   console.log(req.body);
   const profile = new Profile({
     ...req.body,
     userId: user._id,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
   });
 
   await user.save();
@@ -98,14 +102,22 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const profile = await Profile.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  const user = await User.findByIdAndUpdate(profile.userId, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const profile = await Profile.findByIdAndUpdate(
+    req.params.id,
+    { ...req.body, updatedAt: Date.now() },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  const user = await User.findByIdAndUpdate(
+    profile.userId,
+    { ...req.body, updatedAt: Date.now() },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   if (!user) {
     return next(new AppError("no user found with this id", 404));
   }
@@ -141,16 +153,21 @@ exports.loginUser = catchAsync(async (req, res, next) => {
     return next(new AppError("please provide email and password", 400));
   }
 
-  const user = await User.findOne({ email: email }).select("+password");
+  const user = await User.findOne({ email: email });
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("incorrect email or password", 401));
   }
+  const profile = await Profile.findOne({ userId: user._id });
   const token = signToken(user._id);
 
   res.status(200).json({
     status: "success",
     message: "login successfull",
-    token,
+    data: {
+      token,
+      user,
+      profile,
+    },
   });
 });

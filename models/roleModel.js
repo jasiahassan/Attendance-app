@@ -7,6 +7,9 @@ const roleSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
   },
+  updatedAt: {
+    type: Date,
+  },
 });
 
 const Role = mongoose.model("Role", roleSchema);

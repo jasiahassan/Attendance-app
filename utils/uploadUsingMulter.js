@@ -33,7 +33,7 @@ const uploadImage = (req, res, next) => {
 
 const uploadImageToFirebase = (req, res, next) => {
   if (!req.file) {
-    return res.status(400).send("No file uploaded");
+    return next();
   }
 
   const randomId = crypto.randomBytes(2).toString("hex");

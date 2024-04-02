@@ -18,6 +18,12 @@ const AttendanceSchema = new mongoose.Schema({
     type: Boolean,
     default: "false",
   },
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
 const Attendance = mongoose.model("Attendance", AttendanceSchema);

@@ -6,7 +6,13 @@ const Profile = require("../models/profileModel");
 
 exports.createLeaves = catchAsync(async (req, res, next) => {
   const user = await Profile.findOne({ userId: req.user._id });
-  const leave = await Leave.create({ ...req.body, userId: user._id });
+  console.log(user);
+  const leave = await Leave.create({
+    ...req.body,
+    userId: user._id,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
   res.status(200).json({
     status: "success",
     data: {
@@ -20,6 +26,22 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 
   const leaves = await features.query.populate("userId", "firstName lastName");
 
+  if (leaves.length == 0) {
+    return next(new AppError("no leaves found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      leaves,
+    },
+  });
+});
+exports.getLeaves = catchAsync(async (req, res, next) => {
+  const myLeaves = await Profile.find({ userId: req.user._id }).distinct("_id");
+  const leaves = await Leave.find({ userId: myLeaves }).populate(
+    "userId",
+    "firstName lastName"
+  );
   if (leaves.length == 0) {
     return next(new AppError("no leaves found", 404));
   }
@@ -50,6 +72,7 @@ exports.updateLeave = catchAsync(async (req, res, next) => {
   if (leave.isApproved === false) {
     await Leave.findByIdAndUpdate(req.params.id, {
       ...req.body,
+      updatedAt: Date.now(),
     });
   } else {
     return next(new AppError("Leave cannot be updated"));
