@@ -87,6 +87,7 @@ exports.updateLeave = catchAsync(async (req, res, next) => {
 exports.approveLeave = catchAsync(async (req, res, next) => {
   const approved = await Leave.findByIdAndUpdate(req.params.id, {
     isApproved: true,
+    updatedAt: Date.now(),
   });
   res.status(200).json({
     status: "success",
