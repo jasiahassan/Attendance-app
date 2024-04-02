@@ -24,7 +24,8 @@ exports.getUser = catchAsync(async (req, res, next) => {
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const features = new apiFeatures(Profile.find().populate("userId"), req.query)
     .filter()
-    .search();
+    .search()
+    .paginate();
 
   const users = await features.query;
 
