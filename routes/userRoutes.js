@@ -42,6 +42,5 @@ router.get(
 );
 router.post("/forgetPassword", userController.forgetPassword);
 router.patch("/resetPassword/:token", userController.resetPassword);
-router.get("/getRoles", authController.protect, userController.getRoles);
 
 module.exports = router;

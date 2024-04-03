@@ -22,7 +22,6 @@ class apiFeatures {
         $or: [
           { firstName: { $regex: regex } },
           { lastName: { $regex: regex } },
-          { createdAt: { $regex: regex } },
         ],
       });
     }

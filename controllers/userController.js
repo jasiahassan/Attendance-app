@@ -69,16 +69,6 @@ exports.getCount = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getRoles = catchAsync(async (req, res, next) => {
-  const roles = await Role.find();
-  res.status(200).json({
-    status: "success",
-    data: {
-      roles,
-    },
-  });
-});
-
 exports.createUser = catchAsync(async (req, res, next) => {
   const user = new User({
     email: req.body.email,
