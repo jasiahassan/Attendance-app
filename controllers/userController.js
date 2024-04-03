@@ -30,6 +30,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     .paginate();
 
   const users = await features.query;
+  const count = await Profile.countDocuments();
 
   if (users.length == 0) {
     return next(new AppError("No users found", 404));
@@ -39,6 +40,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       users,
+      count,
     },
   });
 });
