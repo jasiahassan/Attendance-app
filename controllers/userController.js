@@ -5,6 +5,8 @@ const AppError = require("../utils/appError");
 const Role = require("../models/roleModel");
 const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
+const sendEmail = require("../utils/email");
+const crypto = require("crypto");
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await Profile.findById(req.user._id).populate({
@@ -170,5 +172,72 @@ exports.loginUser = catchAsync(async (req, res, next) => {
       user,
       profile,
     },
+  });
+});
+
+exports.forgetPassword = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(new AppError("there is no user with this email address", 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  const resetURL = `https://attendance-app-d3bi.onrender.com/users/resetPassword/${resetToken}`;
+
+  const message = `forget your password? click here to reset your password ${resetURL}.\n If you didn't forget your password, please ignore this email!`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: "your password reset token (valid for 10 min)",
+      message,
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "token send to email!",
+      resetURL,
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordRestExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new AppError(
+        "there was an error sending the email. try again later!",
+        500
+      )
+    );
+  }
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  // get user based on the token
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordRestExpires: { $gt: Date.now() },
+  });
+  //if token has not expired,abd there is user, set the new password
+  if (!user) {
+    return next(new AppError("token is invalid or has expired", 400));
+  }
+  user.password = req.body.password;
+  user.passwordResetToken = undefined;
+  user.passwordRestExpires = undefined;
+  await user.save();
+
+  //log the user in, send jwt
+  const token = signToken(user._id);
+
+  res.status(201).json({
+    status: "success",
+    token,
   });
 });

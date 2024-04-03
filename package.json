@@ -2,6 +2,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
     "express": "^5.0.0-beta.2",
     "firebase": "^10.9.0",
@@ -10,6 +11,7 @@
     "mongoose": "^8.2.2",
     "multer": "^1.4.5-lts.1",
     "ngrok": "^5.0.0-beta.2",
+    "nodemailer": "^6.9.13",
     "validator": "^13.11.0"
   },
   "name": "attendance-app",

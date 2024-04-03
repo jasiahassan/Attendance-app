@@ -40,6 +40,8 @@ router.get(
   authController.restrictTo("Admin"),
   userController.getCount
 );
+router.post("/forgetPassword", userController.forgetPassword);
+router.patch("/resetPassword/:token", userController.resetPassword);
 router.get("/getRoles", authController.protect, userController.getRoles);
 
 module.exports = router;
