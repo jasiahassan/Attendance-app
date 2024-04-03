@@ -55,10 +55,8 @@ exports.checkin = catchAsync(async (req, res, next) => {
 });
 
 exports.getAttendance = catchAsync(async (req, res, next) => {
-  const myAttendance = await Profile.find({ userId: req.user._id }).distinct(
-    "_id"
-  );
-  const attendance = await Attendance.find({ userId: myAttendance }).populate(
+  const user = await Profile.find({ userId: req.user._id }).distinct("_id");
+  const attendance = await Attendance.find({ userId: user }).populate(
     "userId",
     "firstName lastName"
   );

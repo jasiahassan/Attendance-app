@@ -1,19 +1,15 @@
 const mongoose = require("mongoose");
 
-const AttendanceSchema = new mongoose.Schema({
-  in: {
+const breakSchema = new mongoose.Schema({
+  startBreak: {
     type: Date,
   },
-  out: {
+  endBreak: {
     type: Date,
   },
   userId: {
     type: mongoose.mongoose.Schema.Types.ObjectId,
     ref: "Profile",
-  },
-  isApproved: {
-    type: Boolean,
-    default: "false",
   },
   createdAt: {
     type: Date,
@@ -23,5 +19,5 @@ const AttendanceSchema = new mongoose.Schema({
   },
 });
 
-const Attendance = mongoose.model("Attendance", AttendanceSchema);
-module.exports = Attendance;
+const Break = mongoose.model("Break", breakSchema);
+module.exports = Break;

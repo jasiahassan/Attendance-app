@@ -4,22 +4,18 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 const attendanceController = require("../controllers/attendanceController");
 
-router.post("/checkin", authController.protect, attendanceController.checkin);
-router.get(
-  "/getAttendance",
-  authController.protect,
-  attendanceController.getAttendance
-);
+router.use(authController.protect);
+
+router.post("/checkin", attendanceController.checkin);
+router.get("/getAttendance", attendanceController.getAttendance);
 router.get(
   "/getAllAttendance",
-  authController.protect,
-  authController.restrictTo("Admin"),
+  // authController.restrictTo("Admin"),
   attendanceController.getAllAttendance
 );
 
 router.patch(
   "/approve/:id",
-  authController.protect,
   authController.restrictTo("Admin"),
   attendanceController.approveAttendance
 );
