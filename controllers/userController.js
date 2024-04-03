@@ -24,12 +24,16 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(Profile.find().populate("userId"), req.query)
+  const features = new apiFeatures(Profile.find(), req.query)
     .filter()
     .search()
     .paginate();
 
-  const users = await features.query;
+  const users = await features.query.populate({
+    path: "userId",
+    populate: { path: "roleId" },
+  });
+
   let totalCount = await Profile.countDocuments();
   if (req.query.search) {
     totalCount = await users.length;

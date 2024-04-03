@@ -19,25 +19,13 @@ class apiFeatures {
     if (this.queryString.search) {
       const searchValue = this.queryString.search;
       console.log(searchValue);
-      const timestamp = "2024-04-03T05:41:39.633+00:00";
-      const date = new Date(timestamp);
-
-      // Extract year, month, and day components separately
-      const year = date.getFullYear();
-      const month = date.getMonth(); // Month starts from 0, so add 1 to get the correct month
-      const day = date.getDate();
-
-      // Construct the date string in the desired format (DD/MM/YYYY)
-      const formattedDate = `${day}/${month}/${year}`;
-
-      console.log(formattedDate); // Output: "3/4/2024"
 
       // Check if the search value is in date format (assuming DD/MM/YYYY format)
       const dateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
       if (dateRegex.test(searchValue)) {
         const [day, month, year] = searchValue.split("/");
-        const searchDate = new Date(`${year}-${month}-${day}`);
-        console.log(searchDate);
+        const searchDate = new Date(`${year}-${day}-${month}`);
+        console.log(searchDate.toISOString());
         const startOfDay = new Date(
           searchDate.getFullYear(),
           searchDate.getMonth(),
