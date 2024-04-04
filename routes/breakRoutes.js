@@ -8,7 +8,11 @@ router.use(authController.protect);
 
 router.post("/startBreak", breakController.startBreak);
 router.get("/getBreaks", breakController.getBreak);
-
+router.patch(
+  "/updateBreak",
+  authController.restrictTo("Admin"),
+  breakController.updateBreak
+);
 router.get(
   "/getAllBreaks",
   authController.restrictTo("Admin"),

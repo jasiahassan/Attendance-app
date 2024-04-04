@@ -13,7 +13,11 @@ router.get(
   // authController.restrictTo("Admin"),
   attendanceController.getAllAttendance
 );
-
+router.patch(
+  "/updateAttendance",
+  authController.restrictTo("Admin"),
+  attendanceController.updateAttendance
+);
 router.patch(
   "/approve/:id",
   authController.restrictTo("Admin"),

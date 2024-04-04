@@ -12,14 +12,6 @@ exports.checkin = catchAsync(async (req, res, next) => {
   endOfDay.setHours(23, 59, 59, 999);
   const user = await Profile.findOne({ userId: req.user._id });
 
-  const usersBreak = await Break.findOne({
-    userId: user._id,
-    createdAt: {
-      $gte: currentDate,
-      $lte: endOfDay,
-    },
-  }).distinct("_id");
-
   const existingCheckin = await Attendance.findOne({
     userId: user._id,
     in: {
@@ -93,7 +85,7 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
 
   const attendance = await features.query.populate([
     { path: "userId", select: "firstName lastName" },
-    { path: "breakId" }, // Populate the breakId field
+    { path: "breakId" },
   ]);
 
   if (attendance.length == 0) {
@@ -108,6 +100,29 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       attendance,
+    },
+  });
+});
+
+exports.updateAttendance = catchAsync(async (req, res, next) => {
+  const updatedAttendance = await Attendance.findByIdAndUpdate(
+    req.params.id,
+    {
+      ...req.body,
+      updatedAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!updatedAttendance) {
+    return next(new AppError("no attendance found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedAttendance,
     },
   });
 });

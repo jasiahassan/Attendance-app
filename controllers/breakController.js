@@ -3,7 +3,6 @@ const AppError = require("../utils/appError");
 const Break = require("../models/breakModel");
 const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
-const Attendance = require("../models/attendanceModel");
 
 exports.startBreak = catchAsync(async (req, res, next) => {
   const currentDate = new Date();
@@ -12,15 +11,16 @@ exports.startBreak = catchAsync(async (req, res, next) => {
   endOfDay.setHours(23, 59, 59, 999);
   const user = await Profile.findOne({ userId: req.user._id });
 
-  const existingBreak = await Break.findOne({
+  const existingBreak = await Break.find({
     userId: user._id,
     startBreak: {
       $gte: currentDate,
       $lte: endOfDay,
     },
   });
+  console.log(existingBreak);
 
-  if (!existingBreak) {
+  if (existingBreak.length === 0) {
     const newBreak = new Break({
       userId: user._id,
       startBreak: Date.now(),
@@ -35,23 +35,38 @@ exports.startBreak = catchAsync(async (req, res, next) => {
       },
     });
   }
-  if (!existingBreak.endBreak) {
-    existingBreak.endBreak = Date.now();
-    existingBreak.updatedAt = Date.now();
-    existingBreak.save();
-    return res.status(200).json({
-      status: "success",
-      data: {
-        existingBreak,
-      },
-    });
-  }
 
-  if (existingBreak.out) {
-    return res.status(400).json({
-      status: "error",
-      message: "You have already checked out for today.",
-    });
+  for (let i = 0; i < existingBreak.length; i++) {
+    console.log("hi");
+    if (!existingBreak[i].endBreak) {
+      existingBreak[i].endBreak = Date.now();
+      existingBreak[i].updatedAt = Date.now();
+      existingBreak[i].save();
+      return res.status(200).json({
+        status: "success",
+        data: {
+          existingBreak,
+        },
+      });
+    }
+  }
+  for (let i = 0; i < existingBreak.length; i++) {
+    if (existingBreak[i].endBreak) {
+      console.log("hi");
+      const newBreak = new Break({
+        userId: user._id,
+        startBreak: Date.now(),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+      newBreak.save();
+      return res.status(200).json({
+        status: "success",
+        data: {
+          newBreak,
+        },
+      });
+    }
   }
 });
 
@@ -84,6 +99,29 @@ exports.getAllBreaks = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       breaks,
+    },
+  });
+});
+
+exports.updateBreak = catchAsync(async (req, res, next) => {
+  const updatedBreak = await Break.findByIdAndUpdate(
+    req.params.id,
+    {
+      ...req.body,
+      updatedAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!updatedBreak) {
+    return next(new AppError("no break found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedBreak,
     },
   });
 });

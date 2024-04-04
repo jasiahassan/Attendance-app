@@ -12,7 +12,7 @@ const AttendanceSchema = new mongoose.Schema({
     ref: "Profile",
   },
   breakId: {
-    type: mongoose.mongoose.Schema.Types.ObjectId,
+    type: [mongoose.mongoose.Schema.Types.ObjectId],
     ref: "Break",
   },
   isApproved: {
