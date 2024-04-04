@@ -8,10 +8,16 @@ router.use(authController.protect);
 
 router.post("/startBreak", breakController.startBreak);
 router.get("/getBreaks", breakController.getBreak);
+
 router.get(
   "/getAllBreaks",
   authController.restrictTo("Admin"),
   breakController.getAllBreaks
+);
+router.delete(
+  "/deleteBreak/:id",
+  authController.restrictTo("Admin"),
+  breakController.deleteBreak
 );
 
 module.exports = router;

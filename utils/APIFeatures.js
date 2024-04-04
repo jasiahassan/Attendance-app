@@ -49,6 +49,7 @@ class apiFeatures {
           $or: [
             { firstName: { $regex: regex } },
             { lastName: { $regex: regex } },
+            { role: { $regex: regex } },
           ],
         });
       }

@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const Attendance = require("../models/attendanceModel");
 const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
+const Break = require("../models/breakModel");
 
 exports.checkin = catchAsync(async (req, res, next) => {
   const currentDate = new Date();
@@ -56,7 +57,12 @@ exports.checkin = catchAsync(async (req, res, next) => {
 
 exports.getAttendance = catchAsync(async (req, res, next) => {
   const user = await Profile.find({ userId: req.user._id }).distinct("_id");
-  const attendance = await Attendance.find({ userId: user }).populate(
+
+  const features = new apiFeatures(Attendance.find({ userId: user }), req.query)
+    .filter()
+    .search();
+
+  const attendance = await features.query.populate(
     "userId",
     "firstName lastName"
   );
@@ -81,6 +87,19 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     "firstName lastName"
   );
 
+  const breakfeatures = new apiFeatures(Break.find(), req.query)
+    .filter()
+    .search();
+
+  const breaks = await breakfeatures.query.populate(
+    "userId",
+    "firstName lastName"
+  );
+
+  if (breaks.length == 0) {
+    return next(new AppError("no break detals found", 404));
+  }
+
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
   }
@@ -88,7 +107,19 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       attendance,
+      breaks,
     },
+  });
+});
+
+exports.deleteAttendance = catchAsync(async (req, res, next) => {
+  const deleteAttendance = await Attendance.findByIdAndDelete(req.params.id);
+  if (!deleteAttendance) {
+    return next(new AppError("no attendance found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    message: "attendance deleted",
   });
 });
 

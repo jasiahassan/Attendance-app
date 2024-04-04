@@ -86,3 +86,14 @@ exports.getAllBreaks = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.deleteBreak = catchAsync(async (req, res, next) => {
+  const deletedBreak = await Break.findByIdAndDelete(req.params.id);
+  if (!deletedBreak) {
+    return next(new AppError("no Break found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    message: "Break deleted",
+  });
+});

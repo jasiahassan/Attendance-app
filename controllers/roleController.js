@@ -37,6 +37,7 @@ exports.updateRole = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 exports.deleteRole = catchAsync(async (req, res, next) => {
   const deletedRole = await Role.findByIdAndDelete(req.params.id);
   if (!deletedRole) {
