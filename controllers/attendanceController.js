@@ -12,6 +12,14 @@ exports.checkin = catchAsync(async (req, res, next) => {
   endOfDay.setHours(23, 59, 59, 999);
   const user = await Profile.findOne({ userId: req.user._id });
 
+  const usersBreak = await Break.findOne({
+    userId: user._id,
+    createdAt: {
+      $gte: currentDate,
+      $lte: endOfDay,
+    },
+  }).distinct("_id");
+
   const existingCheckin = await Attendance.findOne({
     userId: user._id,
     in: {
@@ -23,6 +31,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
   if (!existingCheckin) {
     const newCheckin = new Attendance({
       userId: user._id,
+      breakId: usersBreak,
       in: Date.now(),
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -82,32 +91,23 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     .filter()
     .search();
 
-  const attendance = await features.query.populate(
-    "userId",
-    "firstName lastName"
-  );
-
-  const breakfeatures = new apiFeatures(Break.find(), req.query)
-    .filter()
-    .search();
-
-  const breaks = await breakfeatures.query.populate(
-    "userId",
-    "firstName lastName"
-  );
-
-  if (breaks.length == 0) {
-    return next(new AppError("no break detals found", 404));
-  }
+  const attendance = await features.query.populate([
+    { path: "userId", select: "firstName lastName" },
+    { path: "breakId" }, // Populate the breakId field
+  ]);
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
   }
+  for (let i = 0; i < attendance.length; i++) {
+    const breakDetails = await Break.findById(attendance[i].breakId);
+    attendance[i].breakDetails = breakDetails; // Add break details to the attendance object
+  }
+
   res.status(200).json({
     status: "success",
     data: {
       attendance,
-      breaks,
     },
   });
 });

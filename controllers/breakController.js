@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const Break = require("../models/breakModel");
 const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
+const Attendance = require("../models/attendanceModel");
 
 exports.startBreak = catchAsync(async (req, res, next) => {
   const currentDate = new Date();
