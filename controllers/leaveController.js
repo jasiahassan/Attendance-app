@@ -69,7 +69,7 @@ exports.updateLeave = catchAsync(async (req, res, next) => {
   if (!leave) {
     return next(new AppError("no leave found with this id", 404));
   }
-  if (leave.isApproved === false) {
+  if (leave.isApproved === "Approved") {
     await Leave.findByIdAndUpdate(
       req.params.id,
       {
@@ -95,7 +95,7 @@ exports.approveLeave = catchAsync(async (req, res, next) => {
   const approved = await Leave.findByIdAndUpdate(
     req.params.id,
     {
-      isApproved: true,
+      ...req.body,
       updatedAt: Date.now(),
     },
     {
