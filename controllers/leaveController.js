@@ -21,7 +21,7 @@ exports.createLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllLeaves = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(Leave.find(), req.query).filter();
+  const features = new apiFeatures(Leave.find(), req.query).filter().search();
 
   const leaves = await features.query.populate("userId", "firstName lastName");
 

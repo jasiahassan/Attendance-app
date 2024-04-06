@@ -24,7 +24,7 @@ class apiFeatures {
 
       if (dateRegex.test(searchValue)) {
         const [year, month, day] = searchValue.split("/");
-        const searchDate = new Date(`${year}-${day}-${month}`);
+        const searchDate = new Date(`${year}-${month}-${day}`);
         const startOfDay = new Date(
           searchDate.getFullYear(),
           searchDate.getMonth(),
