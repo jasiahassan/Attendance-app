@@ -84,7 +84,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
     createdAt: Date.now(),
     updatedAt: Date.now(),
   });
-  console.log(req.body);
   const profile = new Profile({
     ...req.body,
     userId: user._id,

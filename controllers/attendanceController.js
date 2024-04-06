@@ -23,7 +23,6 @@ exports.checkin = catchAsync(async (req, res, next) => {
   if (!existingCheckin) {
     const newCheckin = new Attendance({
       userId: user._id,
-      breakId: usersBreak,
       in: Date.now(),
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -140,7 +139,7 @@ exports.deleteAttendance = catchAsync(async (req, res, next) => {
 
 exports.approveAttendance = catchAsync(async (req, res, next) => {
   const approved = await Attendance.findByIdAndUpdate(req.params.id, {
-    isApproved: true,
+    ...req.body,
     updatedAt: Date.now(),
   });
   res.status(200).json({

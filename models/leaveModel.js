@@ -13,7 +13,7 @@ const leaveSchema = new mongoose.Schema({
   },
   isApproved: {
     type: String,
-    default: "pending",
+    default: "Pending",
   },
   createdAt: {
     type: Date,

@@ -16,8 +16,8 @@ const AttendanceSchema = new mongoose.Schema({
     ref: "Break",
   },
   isApproved: {
-    type: Boolean,
-    default: "false",
+    type: String,
+    default: "Pending",
   },
   createdAt: {
     type: Date,

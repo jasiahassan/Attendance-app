@@ -11,6 +11,7 @@ exports.startBreak = catchAsync(async (req, res, next) => {
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
   const user = await Profile.findOne({ userId: req.user._id });
+
   const usersAttendance = await Attendance.findOne({
     userId: user._id,
     createdAt: {
@@ -18,7 +19,6 @@ exports.startBreak = catchAsync(async (req, res, next) => {
       $lte: endOfDay,
     },
   }).distinct("_id");
-  console.log(usersAttendance);
 
   const existingBreak = await Break.find({
     userId: user._id,

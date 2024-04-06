@@ -6,7 +6,6 @@ const Profile = require("../models/profileModel");
 
 exports.createLeaves = catchAsync(async (req, res, next) => {
   const user = await Profile.findOne({ userId: req.user._id });
-  console.log(user);
   const leave = await Leave.create({
     ...req.body,
     userId: user._id,
