@@ -19,7 +19,6 @@ class apiFeatures {
     if (this.queryString.search) {
       const searchValue = this.queryString.search;
 
-      // Check if the search value is in date format (assuming DD/MM/YYYY format)
       const dateRegex = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
 
       if (dateRegex.test(searchValue)) {

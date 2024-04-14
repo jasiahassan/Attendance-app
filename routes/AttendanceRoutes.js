@@ -3,10 +3,15 @@ const router = express.Router();
 
 const authController = require("../controllers/authController");
 const attendanceController = require("../controllers/attendanceController");
+const locationController = require("../controllers/locationController");
 
 router.use(authController.protect);
 
-router.post("/checkin", attendanceController.checkin);
+router.post(
+  "/checkin",
+  // locationController.locationTracker,
+  attendanceController.checkin
+);
 router.get("/getAttendance", attendanceController.getAttendance);
 router.get(
   "/getAllAttendance",

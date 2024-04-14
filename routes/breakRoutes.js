@@ -3,10 +3,15 @@ const router = express.Router();
 
 const authController = require("../controllers/authController");
 const breakController = require("../controllers/breakController");
+const locationController = require("../controllers/locationController");
 
 router.use(authController.protect);
 
-router.post("/startBreak", breakController.startBreak);
+router.post(
+  "/startBreak",
+  // locationController.locationTracker,
+  breakController.startBreak
+);
 router.get("/getBreaks", breakController.getBreak);
 router.patch(
   "/updateBreak",
