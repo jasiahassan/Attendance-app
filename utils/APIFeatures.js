@@ -20,10 +20,10 @@ class apiFeatures {
       const searchValue = this.queryString.search;
 
       // Check if the search value is in date format (assuming DD/MM/YYYY format)
-      const dateRegex = /^\d{4}\/\d{1,2}\/\d{1,2}$/;
+      const dateRegex = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
 
       if (dateRegex.test(searchValue)) {
-        const [year, month, day] = searchValue.split("/");
+        const [year, month, day] = searchValue.split("-");
         const searchDate = new Date(`${year}-${month}-${day}`);
         const startOfDay = new Date(
           searchDate.getFullYear(),
