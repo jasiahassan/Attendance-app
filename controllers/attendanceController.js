@@ -78,21 +78,32 @@ exports.getAttendance = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllAttendance = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(Attendance.find(), req.query)
+  const features = new apiFeatures(
+    Attendance.find().populate([
+      {
+        path: "userId",
+        select: "firstName lastName",
+        populate: {
+          path: "userId",
+          select: "roleId",
+          populate: { path: "roleId", select: "role" },
+        },
+      },
+      { path: "breakId", select: "startBreak endBreak" },
+    ]),
+    req.query
+  )
     .filter()
     .search();
 
-  const attendance = await features.query.populate([
-    { path: "userId", select: "firstName lastName" },
-    { path: "breakId" },
-  ]);
+  const attendance = await features.query;
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
   }
   for (let i = 0; i < attendance.length; i++) {
     const breakDetails = await Break.findById(attendance[i].breakId);
-    attendance[i].breakDetails = breakDetails; // Add break details to the attendance object
+    attendance[i].breakDetails = breakDetails;
   }
 
   res.status(200).json({
@@ -138,10 +149,17 @@ exports.deleteAttendance = catchAsync(async (req, res, next) => {
 });
 
 exports.approveAttendance = catchAsync(async (req, res, next) => {
-  const approved = await Attendance.findByIdAndUpdate(req.params.id, {
-    ...req.body,
-    updatedAt: Date.now(),
-  });
+  const approved = await Attendance.findByIdAndUpdate(
+    req.params.id,
+    {
+      ...req.body,
+      updatedAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   res.status(200).json({
     status: "success",
     data: {

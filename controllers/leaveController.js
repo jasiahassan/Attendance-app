@@ -68,11 +68,12 @@ exports.updateLeave = catchAsync(async (req, res, next) => {
   if (!leave) {
     return next(new AppError("no leave found with this id", 404));
   }
-  if (leave.isApproved === "Approved") {
+  if (leave.isApproved === "Rejected" || leave.isApproved === "Pending") {
     await Leave.findByIdAndUpdate(
       req.params.id,
       {
         ...req.body,
+        isApproved: "Pending",
         updatedAt: Date.now(),
       },
       {
@@ -83,10 +84,9 @@ exports.updateLeave = catchAsync(async (req, res, next) => {
   } else {
     return next(new AppError("Leave cannot be updated"));
   }
-
   res.status(200).json({
     status: "success",
-    message: "leave deleted",
+    message: "leave Updated",
   });
 });
 

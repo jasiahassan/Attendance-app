@@ -48,7 +48,7 @@ class apiFeatures {
           $or: [
             { firstName: { $regex: regex } },
             { lastName: { $regex: regex } },
-            { role: { $regex: regex } },
+            { "userId.userId.roleId.role": { $regex: regex } },
           ],
         });
       }

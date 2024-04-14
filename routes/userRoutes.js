@@ -3,6 +3,9 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 const uploadPhotos = require("../utils/uploadUsingMulter");
+const locationController = require("../controllers/locationController");
+
+router.get("/location", locationController.locationTracker);
 
 router.post(
   "/adduser",
