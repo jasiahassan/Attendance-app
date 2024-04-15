@@ -36,10 +36,11 @@ exports.locationTracker = catchAsync(async (req, res, next) => {
       new AppError("Longitude and latitude are required in headers.", 400)
     );
   }
-  const dblongitude = await Location.find().distinct("longitude");
-  const dblatitude = await Location.find().distinct("latitude");
   const location = await Location.find();
+  const dblongitude = location.longitude;
+  const dblatitude = location.latitude;
   console.log(location);
+  console.log(dblongitude);
   const distance = calculateDistance(
     req.headers.latitude,
     req.headers.longitude,

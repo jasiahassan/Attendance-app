@@ -14,7 +14,7 @@ router.post(
   attendanceController.checkin
 );
 router.get("/getAttendance", attendanceController.getAttendance);
-router.get(
+router.post(
   "/getAllAttendance",
   authController.restrictTo("Admin"),
   attendanceController.getAllAttendance
