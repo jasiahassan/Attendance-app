@@ -79,32 +79,28 @@ exports.getAttendance = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllAttendance = catchAsync(async (req, res, next) => {
-  let attendance;
+  let user;
   if (req.params.roleId) {
     const role = await User.find({ roleId: req.params.roleId }).distinct("_id");
-    const user = await Profile.find({ userId: role }).distinct("_id");
-    attendance = await Attendance.find({ userId: user }).populate([
-      {
-        path: "userId",
-        select: "firstName lastName",
-      },
-      { path: "breakId", select: "startBreak endBreak" },
-    ]);
-  } else {
-    const features = new apiFeatures(
-      Attendance.find().populate([
-        {
-          path: "userId",
-          select: "firstName lastName",
-        },
-        { path: "breakId", select: "startBreak endBreak" },
-      ]),
-      req.query
-    )
+    user = await Profile.find({ userId: role }).distinct("_id");
+  }
+  let features;
+  if (user) {
+    features = new apiFeatures(Attendance.find({ userId: user }), req.query)
       .filter()
       .search();
-    attendance = await features.query;
   }
+  if (!user) {
+    features = new apiFeatures(Attendance.find(), req.query).filter().search();
+  }
+  const attendance = await features.query.populate([
+    {
+      path: "userId",
+      select: "firstName lastName",
+    },
+    { path: "breakId", select: "startBreak endBreak" },
+  ]);
+  // }
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
