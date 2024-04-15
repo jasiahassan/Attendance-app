@@ -36,21 +36,17 @@ exports.locationTracker = catchAsync(async (req, res, next) => {
       new AppError("Longitude and latitude are required in headers.", 400)
     );
   }
-  const location = await Location.find();
-  const dblongitude = location.longitude;
-  const dblatitude = location.latitude;
-  console.log(location);
-  console.log(dblongitude);
+  const location = await Location.findOne();
   const distance = calculateDistance(
     req.headers.latitude,
     req.headers.longitude,
-    dblatitude,
-    dblongitude
+    location.latitude,
+    location.longitude
   );
   const distanceInt = Math.round(distance);
 
-  console.log("Distance:", distance, "meters");
-  if (distanceInt > 5) {
+  console.log("Distance:", distanceInt, "meters");
+  if (distanceInt > location.distance) {
     return next(new AppError("You are not in range", 500));
   }
   next();

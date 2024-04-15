@@ -14,8 +14,8 @@ router.post(
   attendanceController.checkin
 );
 router.get("/getAttendance", attendanceController.getAttendance);
-router.post(
-  "/getAllAttendance",
+router.get(
+  "/getAllAttendance/:roleId?",
   authController.restrictTo("Admin"),
   attendanceController.getAllAttendance
 );

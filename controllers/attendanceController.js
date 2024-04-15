@@ -80,8 +80,8 @@ exports.getAttendance = catchAsync(async (req, res, next) => {
 
 exports.getAllAttendance = catchAsync(async (req, res, next) => {
   let attendance;
-  if (req.body.roleId) {
-    const role = await User.find({ roleId: req.body.roleId }).distinct("_id");
+  if (req.params.roleId) {
+    const role = await User.find({ roleId: req.params.roleId }).distinct("_id");
     const user = await Profile.find({ userId: role }).distinct("_id");
     attendance = await Attendance.find({ userId: user }).populate([
       {
