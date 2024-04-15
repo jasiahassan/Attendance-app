@@ -10,7 +10,6 @@ class apiFeatures {
     excludedFields.forEach((el) => {
       delete queryObj[el];
     });
-
     this.query = this.query.find(queryObj);
     return this;
   }
@@ -47,7 +46,6 @@ class apiFeatures {
           $or: [
             { firstName: { $regex: regex } },
             { lastName: { $regex: regex } },
-            { "userId.userId.roleId.role": { $regex: regex } },
           ],
         });
       }

@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const Attendance = require("../models/attendanceModel");
 const apiFeatures = require("../utils/APIFeatures");
 const Profile = require("../models/profileModel");
+const User = require("../models/userModel");
 const Break = require("../models/breakModel");
 
 exports.checkin = catchAsync(async (req, res, next) => {
@@ -78,32 +79,35 @@ exports.getAttendance = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllAttendance = catchAsync(async (req, res, next) => {
-  const features = new apiFeatures(
-    Attendance.find().populate([
+  let attendance;
+  if (req.body.roleId) {
+    const role = await User.find({ roleId: req.body.roleId }).distinct("_id");
+    const user = await Profile.find({ userId: role }).distinct("_id");
+    attendance = await Attendance.find({ userId: user }).populate([
       {
         path: "userId",
         select: "firstName lastName",
-        populate: {
-          path: "userId",
-          select: "roleId",
-          populate: { path: "roleId", select: "role" },
-        },
       },
       { path: "breakId", select: "startBreak endBreak" },
-    ]),
-    req.query
-  )
-    .filter()
-    .search();
-
-  const attendance = await features.query;
+    ]);
+  } else {
+    const features = new apiFeatures(
+      Attendance.find().populate([
+        {
+          path: "userId",
+          select: "firstName lastName",
+        },
+        { path: "breakId", select: "startBreak endBreak" },
+      ]),
+      req.query
+    )
+      .filter()
+      .search();
+    attendance = await features.query;
+  }
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
-  }
-  for (let i = 0; i < attendance.length; i++) {
-    const breakDetails = await Break.findById(attendance[i].breakId);
-    attendance[i].breakDetails = breakDetails;
   }
 
   res.status(200).json({

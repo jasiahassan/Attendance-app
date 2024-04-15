@@ -9,15 +9,17 @@ router.use(authController.protect);
 
 router.post(
   "/checkin",
-  // locationController.locationTracker,
+  locationController.locationTracker,
+  authController.restrictTo("Employee"),
   attendanceController.checkin
 );
 router.get("/getAttendance", attendanceController.getAttendance);
 router.get(
   "/getAllAttendance",
-  // authController.restrictTo("Admin"),
+  authController.restrictTo("Admin"),
   attendanceController.getAllAttendance
 );
+
 router.patch(
   "/updateAttendance",
   authController.restrictTo("Admin"),

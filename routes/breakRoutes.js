@@ -9,7 +9,8 @@ router.use(authController.protect);
 
 router.post(
   "/startBreak",
-  // locationController.locationTracker,
+  locationController.locationTracker,
+  authController.restrictTo("Employee"),
   breakController.startBreak
 );
 router.get("/getBreaks", breakController.getBreak);
