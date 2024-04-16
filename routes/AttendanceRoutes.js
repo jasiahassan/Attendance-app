@@ -21,7 +21,7 @@ router.get(
 );
 
 router.patch(
-  "/updateAttendance",
+  "/updateAttendance/:id",
   authController.restrictTo("Admin"),
   attendanceController.updateAttendance
 );

@@ -126,6 +126,18 @@ exports.updateAttendance = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
+  const updatedBreak = await Break.findByIdAndUpdate(
+    updatedAttendance.breakId,
+    {
+      ...req.body,
+      updatedAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
   if (!updatedAttendance) {
     return next(new AppError("no attendance found with this id", 404));
   }
@@ -133,6 +145,7 @@ exports.updateAttendance = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       updatedAttendance,
+      updatedBreak,
     },
   });
 });
