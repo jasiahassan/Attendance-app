@@ -9,7 +9,7 @@ router.use(authController.protect);
 
 router.post(
   "/checkin",
-  locationController.locationTracker,
+  // locationController.locationTracker,
   authController.restrictTo("Employee"),
   attendanceController.checkin
 );

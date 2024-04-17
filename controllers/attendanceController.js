@@ -136,7 +136,6 @@ exports.updateAttendance = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-
   if (!updatedAttendance) {
     return next(new AppError("no attendance found with this id", 404));
   }
