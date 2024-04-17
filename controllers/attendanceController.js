@@ -100,7 +100,6 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
     },
     { path: "breakId", select: "startBreak endBreak" },
   ]);
-  // }
 
   if (attendance.length == 0) {
     return next(new AppError("no attendance found", 404));
