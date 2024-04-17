@@ -56,6 +56,7 @@ export default function Leaves() {
       )
       .then((resp) => {
         console.log(resp.data);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -76,6 +77,7 @@ export default function Leaves() {
       )
       .then((resp) => {
         console.log(resp.data);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);

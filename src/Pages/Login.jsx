@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useState } from "react";
 import { url } from "../BaseUrl/Url";
+import toast from "react-hot-toast";
 export default function Login() {
   const [data, setData] = useState({
     email: "",
@@ -13,14 +14,20 @@ export default function Login() {
 
   const postApi = () => {
     setLoading(true);
-    axios.post(`${url}/users/login`, data).then((resp) => {
-      console.log(resp.data);
-      setUser(resp.data);
-      const token = resp.data.data.token;
-      console.log(token);
-      localStorage.setItem("token", token);
-      setLoading(false);
-    });
+    axios
+      .post(`${url}/users/login`, data)
+      .then((resp) => {
+        console.log(resp.data);
+        setUser(resp.data);
+        const token = resp.data.data.token;
+        toast.success(resp.data.message);
+        console.log(token);
+        localStorage.setItem("token", token);
+        setLoading(false);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
   };
 
   const handleChange = (e) => {
@@ -39,12 +46,6 @@ export default function Login() {
     <div className="bg-purple-800 flex justify-center items-center h-full max-h-full min-h-screen">
       <div className="flex bg-white rounded-2xl  shadow-lg w-[60rem]">
         <div className="p-6 sm:flex hidden flex-col gap-y-8 bg-purple-500 rounded-l-2xl md:w-[55%] w-[50%]">
-          {/* <div className="mb-4">
-            <div className="relative w-full overflow-hidden bg-cover bg-[50%] bg-no-repeat">
-              <img src="src/assets/logoraybit-new.png" className="w-28" />
-              <div className="absolute bottom-0 left-0 right-0 top-0 h-full w-28 overflow-hidden bg-white bg-fixed opacity-60"></div>
-            </div>
-          </div> */}
           <img
             src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/logoraybit-new.png_2460.png?alt=media&token=67f2abbc-8416-4cf1-a19c-9944bbf12699"
             alt="Raybit Technologies"

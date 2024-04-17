@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import LogOut from "../Sections/LogOut";
 import axios from "axios";
 import { url } from "../BaseUrl/Url";
@@ -7,6 +8,7 @@ import { RxCross2 } from "react-icons/rx";
 import { MdDone } from "react-icons/md";
 import { ShimmerTable } from "react-shimmer-effects";
 import { FaRegEdit } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function Attendance() {
   const getCurrentDate = () => {
@@ -21,6 +23,7 @@ export default function Attendance() {
   };
   const [employeeData, setEmployeeData] = useState([]);
   const [isloading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [roles, setRoles] = useState([]);
   const [date, setDate] = useState(getCurrentDate());
   const [logout, setLogout] = useState(false);
@@ -60,11 +63,14 @@ export default function Attendance() {
       )
       .then((resp) => {
         console.log(resp.data.data.attendance);
+        setIsError(false);
         setEmployeeData(resp.data.data.attendance);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err.response.data.message);
+        setIsError(true);
+        toast.error(err.response.data.message);
       });
   }, [date, selectedRole]);
 
@@ -107,6 +113,7 @@ export default function Attendance() {
       )
       .then((resp) => {
         console.log(resp.data);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -127,6 +134,7 @@ export default function Attendance() {
       )
       .then((resp) => {
         console.log(resp.data);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -251,83 +259,95 @@ export default function Attendance() {
                     />
                   </div>
                 </div>
-                <div className="w-full  overflow-x-auto rounded-md border">
-                  {isloading ? (
-                    <div>
-                      <ShimmerTable row={4} col={6} />;
-                    </div>
-                  ) : (
-                    <table className=" mb-4 min-w-[40rem] w-full rounded-md">
-                      <thead className="border text-left">
-                        <tr className="text-neutral-500 text-sm font-semibold">
-                          <th className="py-5 pl-10 border-l">S.no</th>
-                          <th className="pl-10 border-l">Employee Name</th>
-                          <th className="pl-10 border-l">Punch In</th>
-                          <th className="pl-10 border-l">Punch Out</th>
-                          <th className="pl-10 border-l">Break Taken</th>
-                          {/* <th className="pl-10 border-l">Production</th> */}
-                          <th className="pl-10 border-l">Approval</th>
-                          <th className="pl-10 border-l">Edit</th>
-                        </tr>
-                      </thead>
-                      <tbody className="w-full text-neutral-800">
-                        {formatteddata.map((item, i) => {
-                          return (
-                            <tr key={item._id} className="border">
-                              <td className="py-5 pl-10">{i + 1}</td>
-                              <td className="pl-10 border-l">
-                                {item?.userId?.firstName}{" "}
-                                {item?.userId?.lastName}
-                              </td>
-                              <td className="pl-10 border-l ">{item.inTime}</td>
+                {isError ? (
+                  <div className="h-[27rem] text-xl text-red-500 flex items-center justify-center">
+                    <p> No Attendance found!</p>
+                  </div>
+                ) : (
+                  <div className="w-full  overflow-x-auto rounded-md border">
+                    {isloading ? (
+                      <div>
+                        <ShimmerTable row={4} col={6} />;
+                      </div>
+                    ) : (
+                      <table className=" mb-4 min-w-[40rem] w-full rounded-md">
+                        <thead className="border text-left">
+                          <tr className="text-neutral-500 text-sm font-semibold">
+                            <th className="py-5 pl-10 border-l">S.no</th>
+                            <th className="pl-10 border-l">Employee Name</th>
+                            <th className="pl-10 border-l">Punch In</th>
+                            <th className="pl-10 border-l">Punch Out</th>
+                            <th className="pl-10 border-l">Break Taken</th>
+                            {/* <th className="pl-10 border-l">Production</th> */}
+                            <th className="pl-10 border-l">Approval</th>
+                            <th className="pl-10 border-l">Edit</th>
+                          </tr>
+                        </thead>
+                        <tbody className="w-full text-neutral-800">
+                          {formatteddata.map((item, i) => {
+                            return (
+                              <tr key={item._id} className="border">
+                                <td className="py-5 pl-10">{i + 1}</td>
+                                <td className="pl-10 border-l">
+                                  {item?.userId?.firstName}{" "}
+                                  {item?.userId?.lastName}
+                                </td>
+                                <td className="pl-10 border-l ">
+                                  {item.inTime}
+                                </td>
 
-                              <td className="pl-10 border-l ">
-                                {item.outTime === "Invalid Date" ? (
-                                  <p className="text-yellow-500 font-medium">
-                                    Pending
-                                  </p>
-                                ) : (
-                                  item.outTime
-                                )}
-                              </td>
-                              <td className="pl-10 border-l ">
-                                {item.totalBreakHours} hrs
-                              </td>
-                              <td className="pl-10 border-l">
-                                {item.isApproved === "Pending" ? (
-                                  <div>
-                                    <MdDone
-                                      className="inline mr-4 text-3xl text-green-500 cursor-pointer"
-                                      onClick={() => handlePresent(item)}
-                                    />
+                                <td className="pl-10 border-l ">
+                                  {item.outTime === "Invalid Date" ? (
+                                    <p className="text-yellow-500 font-medium">
+                                      Pending
+                                    </p>
+                                  ) : (
+                                    item.outTime
+                                  )}
+                                </td>
+                                <td className="pl-10 border-l ">
+                                  {item.totalBreakHours} hrs
+                                </td>
+                                <td className="pl-10 border-l">
+                                  {item.isApproved === "Pending" ? (
+                                    <div>
+                                      <MdDone
+                                        className="inline mr-4 text-3xl text-green-500 cursor-pointer"
+                                        onClick={() => handlePresent(item)}
+                                      />
 
-                                    <RxCross2
-                                      className="inline text-3xl text-red-500 cursor-pointer"
-                                      onClick={() => handleAbsent(item)}
-                                    />
-                                  </div>
-                                ) : (
-                                  <p
-                                    className={
-                                      item.isApproved === "Approved"
-                                        ? "text-green-500 font-medium "
-                                        : "text-red-500 font-medium "
-                                    }
+                                      <RxCross2
+                                        className="inline text-3xl text-red-500 cursor-pointer"
+                                        onClick={() => handleAbsent(item)}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <p
+                                      className={
+                                        item.isApproved === "Approved"
+                                          ? "text-green-500 font-medium "
+                                          : "text-red-500 font-medium "
+                                      }
+                                    >
+                                      {item.isApproved}
+                                    </p>
+                                  )}
+                                </td>
+                                <td className="pl-10 border-l">
+                                  <Link
+                                    to={`/attendance/updateAttendance/${item._id}`}
                                   >
-                                    {item.isApproved}
-                                  </p>
-                                )}
-                              </td>
-                              <td className="pl-10 border-l">
-                                <FaRegEdit className="text-xl text-blue-500" />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  )}
-                </div>
+                                    <FaRegEdit className="text-xl text-blue-500" />
+                                  </Link>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

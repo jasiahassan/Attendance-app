@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { url } from "../../BaseUrl/Url";
 import axios from "axios";
-import Modal from "../../components/Modal";
-import ProfileModal from "../../components/ProfileModal";
-// import { Navigate } from "react-router-dom";
+// import Modal from "../../components/Modal";
 import { LuUserPlus2 } from "react-icons/lu";
 import { CiSearch } from "react-icons/ci";
 import { FaUserEdit } from "react-icons/fa";
@@ -12,32 +10,16 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { ShimmerTable } from "react-shimmer-effects";
+import toast from "react-hot-toast";
 
-export default function Users({ setIsEdited, setEditedUser }) {
+export default function Users() {
   const [data, setData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
   const [pageCount, setPageCount] = useState(1);
   const [searchData, setSearchData] = useState("");
-  const [showProfile, setShowProfile] = useState(false);
-  const [user, setUser] = useState([]);
-  const [isloading, setIsLoading] = useState(true);
+  // const [showProfile, setShowProfile] = useState(false);
 
-  const getUser = (id) => {
-    const token = localStorage.getItem("token");
-    axios
-      .get(`${url}/users/getAllUsers/?_id=${id}`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((resp) => {
-        console.log(resp.data.data.users);
-        setEditedUser(resp.data.data.users);
-        setUser(resp.data.data.users);
-        setIsLoading(false);
-        setIsEdited(true);
-      });
-  };
+  const [isloading, setIsLoading] = useState(true);
 
   const fetchData = async (currentPage) => {
     const token = localStorage.getItem("token");
@@ -73,22 +55,27 @@ export default function Users({ setIsEdited, setEditedUser }) {
     setData(commentsFromServer);
   };
 
-  const deleteData = (id) => {
-    const token = localStorage.getItem("token");
-    axios.delete(`${url}/users/deleteUser/${id}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-        // "Content-Type": "application/json",
-        // "User-Agent": navigator.userAgent,
-      },
-    });
-  };
+  // const deleteData = (id) => {
+  //   const token = localStorage.getItem("token");
+  //   axios
+  //     .delete(`${url}/users/deleteUser/${id}`, {
+  //       headers: {
+  //         Authorization: "Bearer " + token,
+  //         // "Content-Type": "application/json",
+  //         // "User-Agent": navigator.userAgent,
+  //       },
+  //     })
+  //     .then((resp) => {
+  //       console.log(resp);
+  //       toast.message("Deleted Sucessfully!");
+  //     });
+  // };
 
-  const handleShowProfile = (id) => {
-    setShowProfile(true);
-    getUser(id);
-    console.log(id);
-  };
+  // const handleShowProfile = (id) => {
+  //   setShowProfile(true);
+  //   getUser(id);
+  //   console.log(id);
+  // };
 
   // const handleEdit = (id) => {
   //   setIsEdited(true);
@@ -96,11 +83,12 @@ export default function Users({ setIsEdited, setEditedUser }) {
   //   console.log(id);
   //   getUser(id);
   // };
-  const handleDelete = (id) => {
-    setIsDeleted(!isDeleted);
-    console.log("clicked");
-    deleteData(id);
-  };
+  // const handleModal = (id) => {
+  //   setIsDeleted(true);
+
+  //   // deleteData(id);
+  // };
+
   // if(isEdited){
   //   return <Navigate />
   // }
@@ -160,6 +148,7 @@ export default function Users({ setIsEdited, setEditedUser }) {
                 <th>Email Address</th>
                 <th>Phone Number</th>
                 <th>Address</th>
+                <th>Profile</th>
                 <th>Edit</th>
               </tr>
             </thead>
@@ -170,11 +159,9 @@ export default function Users({ setIsEdited, setEditedUser }) {
                   <tr
                     key={item._id}
                     className={
-                      item?.userId?.active
-                        ? "border cursor-pointer hover:bg-gray-300/30"
-                        : "border bg-red-500/20 "
+                      item?.userId?.active ? "border" : "border bg-red-500/20 "
                     }
-                    onClick={() => handleShowProfile(item._id)}
+                    // onClick={() => handleShowProfile(item._id)}
                   >
                     <td className="py-5 pl-10">
                       <div className="flex items-center gap-x-4">
@@ -189,6 +176,14 @@ export default function Users({ setIsEdited, setEditedUser }) {
                     <td>{item.userId?.email}</td>
                     <td>{item.phoneNumber}</td>
                     <td>{item.address}</td>
+                    <td>
+                      <Link
+                        to={`/users/userProfile/${item._id}`}
+                        className="py-1.5 px-4 bg-green-500/20 rounded-full font-medium text-gray-500 cursor-pointer"
+                      >
+                        View
+                      </Link>
+                    </td>
                     <td className="">
                       {item?.userId?.active ? (
                         <div>
@@ -198,10 +193,12 @@ export default function Users({ setIsEdited, setEditedUser }) {
                               // onClick={() => handleEdit(item._id)}
                             />
                           </Link>
-                          <MdDeleteOutline
-                            className="inline text-xl text-red-500/70 cursor-pointer"
-                            onClick={() => handleDelete(item?.userId?._id)}
-                          />
+                          <Link to={`/users/deleteUser/${item?.userId?._id}`}>
+                            <MdDeleteOutline
+                              className="inline text-xl text-red-500/70 cursor-pointer"
+                              // onClick={() => handleModal(item?.userId?._id)}
+                            />
+                          </Link>
                         </div>
                       ) : (
                         <MdOutlinePersonAddDisabled className="text-2xl text-red-500" />
@@ -232,16 +229,16 @@ export default function Users({ setIsEdited, setEditedUser }) {
           />
         </div>
       </div>
-      {isDeleted && (
-        <Modal handleDelete={handleDelete} setIsDeleted={setIsDeleted} />
-      )}
-      {showProfile && (
+      {/* {isDeleted && (
+        <Modal setIsDeleted={setIsDeleted} handleDelete={handleDelete} />
+      )} */}
+      {/* {showProfile && (
         <ProfileModal
           setShowProfile={setShowProfile}
           user={user}
           isloading={isloading}
         />
-      )}
+      )} */}
     </div>
   );
 }

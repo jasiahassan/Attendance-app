@@ -1,7 +1,7 @@
 import axios from "axios";
 import { url } from "../../BaseUrl/Url";
 import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogOut from "../LogOut";
 import SideBar from "../SideBar";
 import { PulseLoader } from "react-spinners";
@@ -23,6 +23,7 @@ export default function AddUser() {
 
   const [logout, setLogout] = useState(false);
   const btnref = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const closeDropDown = (e) => {
@@ -74,6 +75,7 @@ export default function AddUser() {
       .then((resp) => {
         console.log(resp);
         setLoading(false);
+        navigate("/users");
       })
       .catch((err) => {
         console.log(err);
@@ -122,9 +124,9 @@ export default function AddUser() {
               <div className="px-8">
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-sm py-6 text-gray-500 ">
-                    <a href="" className="hover:underline">
+                    <Link to="/users" className="hover:underline">
                       Users
-                    </a>
+                    </Link>
                     <span> &gt; </span>
                     <a href="" className="text-black">
                       Add User
@@ -142,7 +144,7 @@ export default function AddUser() {
                 </div>
 
                 <form action="" onSubmit={handleSubmit}>
-                  <div className="grid grid-cols-3 gap-8 gap-y-16 mb-16">
+                  <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  gap-8 sm:gap-y-16 mb-16">
                     <div>
                       <label
                         htmlFor=""
@@ -154,8 +156,9 @@ export default function AddUser() {
                         type="text"
                         name="firstName"
                         value={userData.firstName}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     <div>
@@ -169,8 +172,9 @@ export default function AddUser() {
                         type="text"
                         name="lastName"
                         value={userData.lastName}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     {/* </div> */}
@@ -186,8 +190,9 @@ export default function AddUser() {
                         type="number"
                         name="phoneNumber"
                         value={userData.phoneNumber}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     <div>
@@ -198,11 +203,12 @@ export default function AddUser() {
                         Role
                       </label>
                       <select
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         name="roleId"
                         value={userData.roleId}
                         // onClick={handleDropDown}
                         onChange={handleChange}
+                        required
                       >
                         {/* <option value="1563ghgvdu78">Employee</option>
             <option value="ghdgf6578978">Manager</option>
@@ -233,8 +239,9 @@ export default function AddUser() {
                         type="email"
                         name="email"
                         value={userData.email}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     <div>
@@ -248,8 +255,9 @@ export default function AddUser() {
                         type="text"
                         name="address"
                         value={userData.address}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                     <div>
@@ -265,8 +273,9 @@ export default function AddUser() {
                         accept="image/*"
                         id="image"
                         // value={isEdited ? editedUser?.image : userData.image}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleSelectFile}
+                        required
                       />
                     </div>
                     <div>
@@ -280,8 +289,9 @@ export default function AddUser() {
                         type="text"
                         name="password"
                         value={userData.password}
-                        className="border-2 w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
                         onChange={handleChange}
+                        required
                       />
                     </div>
                   </div>
