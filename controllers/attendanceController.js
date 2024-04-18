@@ -114,6 +114,7 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAttendance = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const updatedAttendance = await Attendance.findByIdAndUpdate(
     req.params.id,
     {
