@@ -26,6 +26,7 @@ export default function Login() {
         setLoading(false);
       })
       .catch((err) => {
+        setLoading(false);
         toast.error(err.message);
       });
   };
@@ -76,15 +77,16 @@ export default function Login() {
           >
             <h3 className="text-2xl font-medium mb-4">Login to your account</h3>
             <label htmlFor="" className="mb-1 text-gray-500">
-              Username
+              Email
             </label>
             <input
               type="text"
-              placeholder="username"
+              placeholder="Email Address"
               className="px-3 py-2 border outline-purple-500 rounded-lg mb-4 bg-transparent focus:bg-white/70"
               name="email"
               value={data.email}
               onChange={handleChange}
+              required
             />
             <label htmlFor="" className="mb-1 text-gray-500">
               Password
@@ -96,6 +98,7 @@ export default function Login() {
               name="password"
               value={data.password}
               onChange={handleChange}
+              required
             />
             <button className="rounded-full bg-purple-500 py-2.5 text-white font-bold hover:bg-purple-800">
               {loading ? <PulseLoader color="white" size={8} /> : <a>Login</a>}

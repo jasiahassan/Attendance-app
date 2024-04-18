@@ -22,6 +22,7 @@ export default function AddUser() {
   const [loading, setLoading] = useState(false);
 
   const [logout, setLogout] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("");
   const btnref = useRef();
   const navigate = useNavigate();
 
@@ -103,207 +104,157 @@ export default function AddUser() {
   };
   console.log(token);
   return (
-    <div>
-      <div className="flex overflow-hidden h-screen">
-        <SideBar />
-        <div className="w-full overflow-auto">
-          <div className=" h-20 px-8 flex justify-end items-center shadow-xl bg-purple-500 ">
-            <div className="relative">
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/user-icon.png_616f.png?alt=media&token=118f35cb-f815-4276-8b11-33b01faa2d5b"
-                alt=""
-                className="w-12 cursor-pointer"
-                onClick={() => setLogout(!logout)}
-                ref={btnref}
-              />
-              {logout && <LogOut />}
-            </div>
-          </div>
-          <div className="p-8 px-12">
-            <div className="border rounded-xl h-full p-5 shadow-xl">
-              <div className="px-8">
-                <div className="flex items-center justify-between mb-6">
-                  <p className="text-sm py-6 text-gray-500 ">
-                    <Link to="/users" className="hover:underline">
-                      Users
-                    </Link>
-                    <span> &gt; </span>
-                    <a href="" className="text-black">
-                      Add User
-                    </a>
-                  </p>
-                  <Link to="/users">
-                    <button
-                      className="rounded-md bg-purple-500 text-white py-2 px-3 flex items-center gap-x-2 font-medium"
-                      // onClick={() => setAddUser(false)}
-                    >
-                      <FaArrowLeft className="text-xl" />
-                      {/* Go Back */}
-                    </button>
-                  </Link>
-                </div>
+    <div className="flex overflow-hidden h-screen">
+      {/* Sidebar component */}
+      <SideBar />
 
-                <form action="" onSubmit={handleSubmit}>
-                  <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  gap-8 sm:gap-y-16 mb-16">
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={userData.firstName}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={userData.lastName}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    {/* </div> */}
-                    {/* <div className="flex  items-center gap-x-16"> */}
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Contact Number
-                      </label>
-                      <input
-                        type="number"
-                        name="phoneNumber"
-                        value={userData.phoneNumber}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Role
-                      </label>
-                      <select
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        name="roleId"
-                        value={userData.roleId}
-                        // onClick={handleDropDown}
-                        onChange={handleChange}
-                        required
-                      >
-                        {/* <option value="1563ghgvdu78">Employee</option>
-            <option value="ghdgf6578978">Manager</option>
-            <option value="67hgjgdhfbbb">Admin</option> */}
-                        {roles.map((role) => {
-                          return (
-                            <option
-                              key={role._id}
-                              value={role._id}
-                              name="roleId"
-                            >
-                              {role.role}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                    {/* </div> */}
-                    {/* <div className="flex items-center gap-x-16"> */}
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={userData.email}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        name="address"
-                        value={userData.address}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Upload Photo
-                      </label>
-                      <input
-                        type="file"
-                        name="image"
-                        accept="image/*"
-                        id="image"
-                        // value={isEdited ? editedUser?.image : userData.image}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleSelectFile}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label
-                        htmlFor=""
-                        className="block mb-1 font-medium text-gray-500"
-                      >
-                        Password
-                      </label>
-                      <input
-                        type="text"
-                        name="password"
-                        value={userData.password}
-                        className="border-2 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] w-full rounded-md py-2 px-3 focus:outline-purple-500"
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <button className="bg-purple-500 rounded-full px-20 py-2 text-white text-lg font-medium hover:bg-purple-800">
-                    {loading ? (
-                      <PulseLoader color="white" size={8} />
-                    ) : (
-                      <p> Submit</p>
-                    )}
+      <div className="w-full overflow-auto">
+        <div className="md:h-20 h-16 px-4 md:px-8 flex justify-end items-center bg-purple-500">
+          <div className="relative">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
+              alt=""
+              className="w-10 md:w-12 cursor-pointer rounded-full"
+              onClick={() => setLogout(!logout)}
+              // Assuming btnref is defined somewhere in your component
+              ref={btnref}
+            />
+            {logout && <LogOut />}
+          </div>
+        </div>
+
+        <div className="p-4 md:p-8">
+          <div className="border rounded-xl h-full p-4 md:p-5 shadow-xl">
+            <div className="px-4 md:px-8">
+              <div className="flex sm:flex-row flex-col-reverse sm:items-center justify-between mb-4 md:mb-6">
+                <p className="text-sm py-4 md:py-6 text-gray-500">
+                  <Link to="/users" className="hover:underline">
+                    Users
+                  </Link>
+                  <span> &gt; </span>
+                  <a href="" className="text-black">
+                    Add User
+                  </a>
+                </p>
+                <Link to="/users">
+                  <button className="rounded-md bg-purple-500 text-white py-2 px-3 flex items-center gap-x-2 font-medium">
+                    <FaArrowLeft className="text-xl" />
                   </button>
-                </form>
+                </Link>
               </div>
+
+              <form action="" onSubmit={handleSubmit}>
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 sm:gap-y-16 mb-16">
+                  {[
+                    {
+                      label: "First Name",
+                      name: "firstName",
+                      value: userData.firstName,
+                    },
+                    {
+                      label: "Last Name",
+                      name: "lastName",
+                      value: userData.lastName,
+                    },
+                    {
+                      label: "Contact Number",
+                      name: "phoneNumber",
+                      value: userData.phoneNumber,
+                    },
+                    {
+                      label: "Role",
+                      name: "roleId",
+                      value: selectedRole,
+                      type: "select",
+                      options: [
+                        { value: "", label: "Select Role...", disabled: true },
+                        ...roles.map((role) => ({
+                          value: role._id,
+                          label: role.role,
+                        })),
+                      ],
+                      onChange: (e) => {
+                        const roleId = e.target.value;
+                        setUserData((prevState) => ({
+                          ...prevState,
+                          roleId: roleId,
+                        }));
+                        setSelectedRole(roleId);
+                      },
+                    },
+                    { label: "Email", name: "email", value: userData.email },
+                    {
+                      label: "Address",
+                      name: "address",
+                      value: userData.address,
+                    },
+                    {
+                      label: "Upload Photo",
+                      name: "image",
+                      type: "file",
+                      onChange: handleSelectFile,
+                    },
+                    {
+                      label: "Password",
+                      name: "password",
+                      value: userData.password,
+                    },
+                  ].map(
+                    ({
+                      label,
+                      name,
+                      type = "text",
+                      onChange,
+                      value,
+                      options,
+                    }) => (
+                      <div key={name}>
+                        <label
+                          htmlFor={name}
+                          className="block mb-1 font-medium text-gray-500"
+                        >
+                          {label}
+                        </label>
+                        {type === "select" ? (
+                          <select
+                            name={name}
+                            value={value}
+                            className="border-2 w-full 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                            onChange={onChange}
+                            required
+                          >
+                            {options.map((option) => (
+                              <option
+                                key={option.value}
+                                value={option.value}
+                                disabled={option.disabled}
+                              >
+                                {option.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={type}
+                            name={name}
+                            value={value}
+                            className="border-2 w-full 2xl:w-[20rem] md:w-[13rem] xl:w-[16rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                            onChange={onChange || handleChange}
+                            required
+                          />
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+                <button className="bg-purple-500 rounded-full px-16 py-2 text-white text-lg font-medium hover:bg-purple-800">
+                  {loading ? (
+                    <PulseLoader color="white" size={8} />
+                  ) : (
+                    <p>Submit</p>
+                  )}
+                </button>
+              </form>
             </div>
           </div>
         </div>

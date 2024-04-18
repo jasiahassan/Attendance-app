@@ -1,12 +1,11 @@
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
 import Attendance from "./Pages/Attendance";
+import Leaves from "./Pages/Leaves";
+import Settings from "./Pages/Settings";
 import UpdateAttendance from "./Sections/Attendance/UpdateAttendance";
 import UserProfile from "./Sections/Users/UserProfile";
-// import Employees from "./Pages/Employees";
-// import SideBar from "./Sections/SideBar";
-import UserDetails from "./Pages/UserDetails";
-import Leaves from "./Pages/Leaves";
+import Users from "./Pages/Users";
 import UpdateUser from "./Sections/Users/UpdateUser";
 import AddUser from "./Sections/Users/AddUser";
 import DeleteModal from "./Sections/Users/DeleteModal";
@@ -27,13 +26,13 @@ function App() {
               path="/attendance/updateAttendance/:id"
               element={<UpdateAttendance />}
             />
-            {/* <Route path="/employees" element={<Employees />} /> */}
-            <Route path="/users" element={<UserDetails />} />
+            <Route path="/users" element={<Users />} />
             <Route path="/users/userProfile/:id" element={<UserProfile />} />
             <Route path="/users/addUser" element={<AddUser />} />
             <Route path="/users/updateUser/:id" element={<UpdateUser />} />
             <Route path="/users/deleteUser/:id" element={<DeleteModal />} />
             <Route path="/leaves" element={<Leaves />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>
       </Router>

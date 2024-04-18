@@ -32,12 +32,12 @@ export default function DeleteModal() {
         <div className="flex overflow-hidden h-screen">
           <SideBar />
           <div className="w-full overflow-auto">
-            <div className=" h-20 px-8 flex justify-end items-center shadow-xl bg-purple-500 ">
+            <div className=" h-20 px-8 flex justify-end items-center bg-purple-500 ">
               <div className="relative">
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/user-icon.png_616f.png?alt=media&token=118f35cb-f815-4276-8b11-33b01faa2d5b"
+                  src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
                   alt=""
-                  className="w-12 cursor-pointer"
+                  className="w-12 cursor-pointer rounded-full"
                   //     onClick={() => setLogout(!logout)}
                   //     ref={btnref}
                 />

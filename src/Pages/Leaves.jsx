@@ -86,113 +86,99 @@ export default function Leaves() {
 
   const handleApprove = (item) => {
     postApprove(item);
-    // setIsApproveClick(true);
   };
   const handleDeny = (item) => {
     postDeny(item);
-    // setIsApproveClick(true);
   };
 
   return (
-    <div>
+    <div className="">
       <div className="flex overflow-hidden h-screen">
         <SideBar />
         <div className="w-full overflow-auto">
-          <div className=" h-20 px-8 flex justify-end items-center border shadow-xl bg-purple-500 border-purple-500">
+          <div className="md:h-20 h-16 px-8 flex justify-end items-center bg-purple-500 border-purple-500">
             <div className="relative">
               <img
-                src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/user-icon.png_616f.png?alt=media&token=118f35cb-f815-4276-8b11-33b01faa2d5b"
+                src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
                 alt=""
-                className="w-12 cursor-pointer"
+                className="w-10 md:w-12 cursor-pointer rounded-full"
                 onClick={() => setLogout(!logout)}
                 ref={btnref}
               />
               {logout && <LogOut />}
             </div>
           </div>
-          <div className="py-8 px-12">
-            <div className="border rounded-xl h-screen px-12 py-8 shadow-xl">
+          <div className="py-8 md:px-12 px-4">
+            <div className="h-auto md:h-screen md:px-12 md:py-8 py-2 md:shadow-xl md:border md:rounded-md">
               <h1 className="text-3xl text-purple-500 font-medium mb-6">
                 Leave Details
               </h1>
-              <div className="w-full  overflow-x-auto rounded-md">
+              <div className="w-full overflow-x-auto rounded-md border">
                 {isLoading ? (
                   <div>
                     <ShimmerTable row={4} col={4} />;
                   </div>
                 ) : (
-                  <table className=" mb-4 min-w-[40rem] w-full rounded-md">
+                  <table className="mb-4  min-w-[43rem] w-full rounded-md">
                     <thead className="border text-left">
                       <tr className="text-neutral-500 text-sm font-semibold">
                         <th className="py-5 pl-10">NAME</th>
                         <th>LEAVE TYPE</th>
                         <th>DESCRIPTION</th>
-
-                        <th>APPROVAL</th>
+                        <th className="pl-4">APPROVAL</th>
                       </tr>
                     </thead>
                     <tbody className="w-full text-neutral-800">
-                      {leaveData.map((item) => {
-                        return (
-                          <tr
-                            key={item._id}
-                            className="border cursor-pointer hover:bg-gray-300/30"
-                            // onClick={() => handleShowProfile(item._id)}
-                          >
-                            <td className="py-5 pl-10">
-                              {item.userId.firstName} {item.userId.lastName}
-                            </td>
-                            <td>
-                              <button className="px-6 py-1.5  bg-green-500/20 rounded-full font-medium">
-                                {item.leaveType}
-                              </button>
-                            </td>
-                            <td className="w-[20rem]">
-                              {fulllDescription
-                                ? item.description
-                                : `${item.description.substring(0, 20)}`}
-                              {fulllDescription || (
-                                <RxDotsHorizontal
-                                  className="inline"
-                                  onClick={() => setFulllDescription(true)}
+                      {leaveData.map((item) => (
+                        <tr
+                          key={item._id}
+                          className="border cursor-pointer hover:bg-gray-300/30"
+                        >
+                          <td className="py-5 pl-10">
+                            {item.userId.firstName} {item.userId.lastName}
+                          </td>
+                          <td>
+                            <button className="px-6 py-1.5 bg-green-500/20 rounded-full font-medium">
+                              {item.leaveType}
+                            </button>
+                          </td>
+                          <td className="w-[15rem] ">
+                            {fulllDescription
+                              ? item.description
+                              : `${item.description.substring(0, 20)}`}
+                            {fulllDescription || (
+                              <RxDotsHorizontal
+                                className="inline"
+                                onClick={() => setFulllDescription(true)}
+                              />
+                            )}
+                          </td>
+                          <td className="pl-4">
+                            {item.isApproved === "Pending" ? (
+                              <div>
+                                <MdDone
+                                  className="inline mr-4 text-3xl text-green-500 cursor-pointer"
+                                  onClick={() => handleApprove(item)}
                                 />
-                              )}
-                            </td>
-                            <td>
-                              {item.isApproved === "Pending" ? (
-                                <div>
-                                  <MdDone
-                                    className="inline mr-4 text-3xl text-green-500 cursor-pointer"
-                                    onClick={() => handleApprove(item)}
-                                  />
-
-                                  <RxCross2
-                                    className="inline text-3xl text-red-500 cursor-pointer"
-                                    onClick={() => handleDeny(item)}
-                                  />
-                                </div>
-                              ) : (
-                                <p
-                                  className={
-                                    item.isApproved === "Approved"
-                                      ? "text-green-500 font-medium "
-                                      : "text-red-500 font-medium "
-                                  }
-                                >
-                                  {item.isApproved}
-                                </p>
-                              )}
-
-                              {/* {isApproveClick &&
-                              (item.isApproved ? (
-                                <p>Approved</p>
-                              ) : (
-                                <p>Denied</p>
-                              ))} */}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                                <RxCross2
+                                  className="inline text-3xl text-red-500 cursor-pointer"
+                                  onClick={() => handleDeny(item)}
+                                />
+                              </div>
+                            ) : (
+                              <p
+                                className={
+                                  item.isApproved === "Approved"
+                                    ? "text-green-500 font-medium"
+                                    : "text-red-500 font-medium"
+                                }
+                              >
+                                {item.isApproved}
+                              </p>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 )}
@@ -202,6 +188,5 @@ export default function Leaves() {
         </div>
       </div>
     </div>
-    // </div>
   );
 }
