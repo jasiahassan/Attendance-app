@@ -117,6 +117,9 @@ exports.updateAttendance = catchAsync(async (req, res, next) => {
   console.log(req.body);
   console.log(req.params.id);
   const atten = req.body;
+  if (!req.body) {
+    return next(new AppError("no body found", 404));
+  }
   const updatedAttendance = await Attendance.findByIdAndUpdate(
     req.params.id,
     {
