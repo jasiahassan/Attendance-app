@@ -115,6 +115,8 @@ exports.getAllAttendance = catchAsync(async (req, res, next) => {
 
 exports.updateAttendance = catchAsync(async (req, res, next) => {
   console.log(req.body);
+  console.log(req.params.id);
+  const atten = req.body;
   const updatedAttendance = await Attendance.findByIdAndUpdate(
     req.params.id,
     {
@@ -143,6 +145,7 @@ exports.updateAttendance = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: {
+      atten,
       updatedAttendance,
       updatedBreak,
     },
