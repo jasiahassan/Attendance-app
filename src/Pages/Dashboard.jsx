@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import SideBar from "../Sections/SideBar";
-import LogOut from "../Sections/LogOut";
+import SideBar from "../components/SideBar";
+import LogOut from "../components/LogOut";
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { url } from "../BaseUrl/Url";

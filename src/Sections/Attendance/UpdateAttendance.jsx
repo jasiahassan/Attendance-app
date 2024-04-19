@@ -1,10 +1,11 @@
-import SideBar from "../SideBar";
+import SideBar from "../../components/SideBar";
+import LogOut from "../../components/LogOut";
 import { url } from "../../BaseUrl/Url";
 import axios from "axios";
 import { PulseLoader } from "react-spinners";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "react-hot-toast";
 export default function UpdateAttendance() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,8 +17,22 @@ export default function UpdateAttendance() {
     startBreak: "",
     endBreak: "",
   });
+  const [logout, setLogout] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const btnref = useRef();
+
+  useEffect(() => {
+    const closeDropDown = (e) => {
+      // console.log(btnref.current);
+      if (btnref.current && !btnref.current.contains(e.target)) {
+        setLogout(false);
+      }
+    };
+    document.body.addEventListener("click", closeDropDown);
+    return () => document.body.removeEventListener("click", closeDropDown);
+  }, []);
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -148,7 +163,10 @@ export default function UpdateAttendance() {
               src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
               alt=""
               className="w-10 md:w-12 cursor-pointer rounded-full"
+              onClick={() => setLogout(!logout)}
+              ref={btnref}
             />
+            {logout && <LogOut />}
           </div>
         </div>
         <div className="p-4 md:p-8">

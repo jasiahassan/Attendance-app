@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { IoHomeSharp } from "react-icons/io5";
+import { IoHomeSharp, IoSettings } from "react-icons/io5";
 import { FaUsers, FaUserTimes } from "react-icons/fa";
 import { CiViewList } from "react-icons/ci";
+import { MdManageAccounts } from "react-icons/md";
 
 export default function SideBar() {
   const location = useLocation();
@@ -36,7 +37,7 @@ export default function SideBar() {
           }
         >
           <CiViewList className="inline text-2xl mr-2" />
-          <p className="md:inline hidden">Attendance</p>
+          <p className="md:inline hidden">Manage Attendance</p>
         </Link>
 
         <Link
@@ -48,7 +49,7 @@ export default function SideBar() {
           }
         >
           <FaUsers className="inline text-2xl mr-2" />
-          <p className="md:inline hidden">Users</p>
+          <p className="md:inline hidden">Manage Users</p>
         </Link>
         <Link
           to="/leaves"
@@ -59,7 +60,29 @@ export default function SideBar() {
           }
         >
           <FaUserTimes className="inline text-2xl mr-2 " />
-          <p className="md:inline hidden">Leaves</p>
+          <p className="md:inline hidden">Manage Leaves</p>
+        </Link>
+        <Link
+          to="/roles"
+          className={
+            location.pathname === "/roles"
+              ? "px-4 py-3 cursor-pointer bg-purple-800/70 rounded-3xl text-white font-bold mb-3 "
+              : "px-4 py-3 cursor-pointer hover:bg-gray-500/20 rounded-3xl  mb-3"
+          }
+        >
+          <MdManageAccounts className="inline text-2xl mr-2 " />
+          <p className="md:inline hidden">Manage Roles</p>
+        </Link>
+        <Link
+          to="/settings"
+          className={
+            location.pathname === "/settings"
+              ? "px-4 py-3 cursor-pointer bg-purple-800/70 rounded-3xl text-white font-bold mb-3 "
+              : "px-4 py-3 cursor-pointer hover:bg-gray-500/20 rounded-3xl  mb-3"
+          }
+        >
+          <IoSettings className="inline text-2xl mr-2 " />
+          <p className="md:inline hidden">Settings</p>
         </Link>
       </div>
     </div>

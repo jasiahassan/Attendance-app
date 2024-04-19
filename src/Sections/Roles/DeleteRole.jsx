@@ -1,19 +1,19 @@
-import { RxCross2 } from "react-icons/rx";
 import SideBar from "../../components/SideBar";
-import { useNavigate, useParams } from "react-router-dom";
-import { url } from "../../BaseUrl/Url";
+import { RxCross2 } from "react-icons/rx";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { url } from "../../BaseUrl/Url";
 import toast from "react-hot-toast";
-export default function DeleteModal() {
+export default function DeleteRole() {
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
   const handleCancel = () => {
-    navigate("/users");
+    navigate("/roles");
   };
   const handleDelete = () => {
     axios
-      .delete(`${url}/users/deleteUser/${id}`, {
+      .delete(`${url}/roles/deleteRole/${id}`, {
         headers: {
           Authorization: "Bearer " + token,
           // "Content-Type": "application/json",
@@ -22,8 +22,8 @@ export default function DeleteModal() {
       })
       .then((resp) => {
         console.log(resp);
-        toast.message("Deleted Sucessfully!");
-        navigate("/users");
+        toast.success("Deleted Sucessfully!");
+        navigate("/roles");
       });
   };
   return (
@@ -62,7 +62,7 @@ export default function DeleteModal() {
           className="absolute top-[4%] left-[93%] text-2xl text-gray-600 cursor-pointer"
           onClick={handleCancel}
         />
-        <p className="text-lg">Are you sure you want to delete this user?</p>
+        <p className="text-lg">Are you sure you want to delete this role?</p>
         <div className="flex items-center gap-x-4">
           <button
             className="border text-gray-600 py-1.5 px-3 rounded-md"

@@ -1,5 +1,6 @@
-import SideBar from "../SideBar";
-import { useState, useEffect } from "react";
+import SideBar from "../../components/SideBar";
+import LogOut from "../../components/LogOut";
+import { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { url } from "../../BaseUrl/Url";
 import axios from "axios";
@@ -9,7 +10,21 @@ import { ShimmerCategoryItem } from "react-shimmer-effects";
 export default function UserProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState([]);
+  const [logout, setLogout] = useState(false);
   const { id } = useParams();
+
+  const btnref = useRef();
+
+  useEffect(() => {
+    const closeDropDown = (e) => {
+      // console.log(btnref.current);
+      if (btnref.current && !btnref.current.contains(e.target)) {
+        setLogout(false);
+      }
+    };
+    document.body.addEventListener("click", closeDropDown);
+    return () => document.body.removeEventListener("click", closeDropDown);
+  }, []);
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -41,10 +56,10 @@ export default function UserProfile() {
                 src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
                 alt=""
                 className="w-12 cursor-pointer rounded-full"
-                //     onClick={() => setLogout(!logout)}
-                //     ref={btnref}
+                onClick={() => setLogout(!logout)}
+                ref={btnref}
               />
-              {/* // {logout && <LogOut />} */}
+              {logout && <LogOut />}
             </div>
           </div>
           <div className="p-8 px-12">

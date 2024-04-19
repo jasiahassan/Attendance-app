@@ -2,8 +2,8 @@ import axios from "axios";
 import { url } from "../../BaseUrl/Url";
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import LogOut from "../LogOut";
-import SideBar from "../SideBar";
+import LogOut from "../../components/LogOut";
+import SideBar from "../../components/SideBar";
 import { PulseLoader } from "react-spinners";
 import { FaArrowLeft } from "react-icons/fa6";
 
@@ -116,7 +116,6 @@ export default function AddUser() {
               alt=""
               className="w-10 md:w-12 cursor-pointer rounded-full"
               onClick={() => setLogout(!logout)}
-              // Assuming btnref is defined somewhere in your component
               ref={btnref}
             />
             {logout && <LogOut />}

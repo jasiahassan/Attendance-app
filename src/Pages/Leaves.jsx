@@ -1,5 +1,5 @@
-import SideBar from "../Sections/SideBar";
-import LogOut from "../Sections/LogOut";
+import SideBar from "../components/SideBar";
+import LogOut from "../components/LogOut";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { url } from "../BaseUrl/Url";
@@ -92,7 +92,7 @@ export default function Leaves() {
   };
 
   return (
-    <div className="">
+    <div>
       <div className="flex overflow-hidden h-screen">
         <SideBar />
         <div className="w-full overflow-auto">
@@ -109,7 +109,7 @@ export default function Leaves() {
             </div>
           </div>
           <div className="py-8 md:px-12 px-4">
-            <div className="h-auto md:h-screen md:px-12 md:py-8 py-2 md:shadow-xl md:border md:rounded-md">
+            <div className="h-auto md:h-screen md:px-12 md:py-8 py-2 md:shadow-xl md:border md:rounded-xl">
               <h1 className="text-3xl text-purple-500 font-medium mb-6">
                 Leave Details
               </h1>

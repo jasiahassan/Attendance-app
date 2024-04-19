@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import LogOut from "../Sections/LogOut";
+import LogOut from "../components/LogOut";
 import axios from "axios";
 import { url } from "../BaseUrl/Url";
-import SideBar from "../Sections/SideBar";
+import SideBar from "../components/SideBar";
 import { RxCross2 } from "react-icons/rx";
 import { MdDone } from "react-icons/md";
 import { ShimmerTable } from "react-shimmer-effects";
@@ -262,7 +262,7 @@ export default function Attendance() {
                 <p>No Attendance found!</p>
               </div>
             ) : (
-              <div className="w-full overflow-x-auto rounded-md border">
+              <div className="w-full overflow-x-auto rounded-xl border">
                 {isloading ? (
                   <ShimmerTable row={4} col={6} />
                 ) : (

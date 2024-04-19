@@ -1,11 +1,12 @@
 import axios from "axios";
 import { url } from "../../BaseUrl/Url";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { PulseLoader } from "react-spinners";
 import { FaArrowLeft } from "react-icons/fa6";
-import SideBar from "../SideBar";
+import SideBar from "../../components/SideBar";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import LogOut from "../../components/LogOut";
 export default function UpdateUser() {
   const [roles, setRoles] = useState([]);
   const [userData, setUserData] = useState({
@@ -19,8 +20,22 @@ export default function UpdateUser() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [logout, setLogout] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const btnref = useRef();
+
+  useEffect(() => {
+    const closeDropDown = (e) => {
+      // console.log(btnref.current);
+      if (btnref.current && !btnref.current.contains(e.target)) {
+        setLogout(false);
+      }
+    };
+    document.body.addEventListener("click", closeDropDown);
+    return () => document.body.removeEventListener("click", closeDropDown);
+  }, []);
 
   const token = localStorage.getItem("token");
   useEffect(() => {
@@ -122,7 +137,10 @@ export default function UpdateUser() {
             src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
             alt=""
             className="w-10 md:w-12 cursor-pointer rounded-full"
+            onClick={() => setLogout(!logout)}
+            ref={btnref}
           />
+          {logout && <LogOut />}
         </div>
         <div className="p-4 md:p-8">
           <div className="border rounded-xl h-full p-4 md:p-5 shadow-xl">

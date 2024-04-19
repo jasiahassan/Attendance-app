@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import SideBar from "../Sections/SideBar";
+import SideBar from "../components/SideBar";
 import UsersSection from "../Sections/Users/UsersSection";
-import LogOut from "../Sections/LogOut";
+import LogOut from "../components/LogOut";
 
 export default function Users() {
   const [logout, setLogout] = useState(false);
