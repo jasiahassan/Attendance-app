@@ -51,3 +51,63 @@ exports.locationTracker = catchAsync(async (req, res, next) => {
   }
   next();
 });
+
+exports.createLocatiion = catchAsync(async (req, res, next) => {
+  const newLocation = await Location.create({
+    ...req.body,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      newLocation,
+    },
+  });
+});
+
+exports.updateLocation = catchAsync(async (req, res, next) => {
+  const updatedLocation = await Location.findByIdAndUpdate(
+    req.params.id,
+    {
+      ...req.body,
+      updatedAt: Date.now(),
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!updatedLocation) {
+    return next(new AppError("no location found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedLocation,
+    },
+  });
+});
+
+exports.deleteLocation = catchAsync(async (req, res, next) => {
+  const deletedLocation = await Location.findByIdAndDelete(req.params.id);
+  if (!deletedLocation) {
+    return next(new AppError("no location found with this id", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    message: "location deleted",
+  });
+});
+exports.getLocation = catchAsync(async (req, res, next) => {
+  const location = await Location.find();
+  if (!location) {
+    return next(new AppError("no location found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      location,
+    },
+  });
+});
