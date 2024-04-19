@@ -222,7 +222,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     passwordResetToken: hashedToken,
     passwordRestExpires: { $gt: Date.now() },
   });
-  //if token has not expired,abd there is user, set the new password
+  //if token has not expired,and there is user, set the new password
   if (!user) {
     return next(new AppError("token is invalid or has expired", 400));
   }
@@ -235,6 +235,24 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   const token = signToken(user._id);
 
   res.status(201).json({
+    status: "success",
+    token,
+  });
+});
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError("incorrect password", 401));
+  }
+  //if so update password
+  user.password = req.body.password;
+  await user.save();
+
+  //log user in send jwt
+  const token = signToken(user._id);
+  res.status(200).json({
     status: "success",
     token,
   });

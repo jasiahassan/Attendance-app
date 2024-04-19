@@ -60,3 +60,16 @@ exports.getRoles = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getRole = catchAsync(async (req, res, next) => {
+  const role = await Role.findById(req.params.id);
+  if (!role) {
+    return next(new AppError("no role found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      role,
+    },
+  });
+});
