@@ -46,12 +46,12 @@ export default function Dashboard() {
     <div className="flex overflow-hidden h-screen">
       <SideBar />
       <div className="w-full overflow-auto">
-        <div className="md:h-20 h-16  px-4 md:px-8 flex justify-end items-center bg-purple-500 ">
+        <div className="md:h-20 h-16  px-4 md:px-8 flex items-center bg-purple-500 justify-end">
           <div className="relative">
             <img
               src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
               alt=""
-              className="w-10 md:w-12 cursor-pointer rounded-full"
+              className=" md:w-12 w-10 cursor-pointer rounded-full"
               onClick={() => setLogout(!logout)}
               ref={btnref}
             />
