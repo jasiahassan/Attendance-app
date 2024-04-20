@@ -27,7 +27,7 @@ export default function Users() {
             <img
               src="https://firebasestorage.googleapis.com/v0/b/attendance-app-90eb5.appspot.com/o/257981384_3004176593182670_5671056491270256252_n%20(1).jpg_9645.jpg?alt=media&token=ba235831-ea9d-4293-ac45-69658f5135bb"
               alt=""
-              className="md:w-12 w-10 cursor-pointer rounded-full"
+              className="w-12 cursor-pointer rounded-full"
               onClick={() => setLogout(!logout)}
               ref={btnref}
             />
