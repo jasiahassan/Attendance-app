@@ -49,6 +49,7 @@ export default function UsersSection() {
 
   const handlePageClick = async (data) => {
     let currentPage = data.selected + 1;
+    setIsLoading(true);
     const commentsFromServer = await fetchData(currentPage);
 
     setData(commentsFromServer);

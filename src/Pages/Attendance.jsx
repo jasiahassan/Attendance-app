@@ -240,7 +240,7 @@ export default function Attendance() {
                   onChange={handleChange}
                 >
                   <option value="" disabled selected>
-                    Select Role...
+                    --Select Role--
                   </option>
                   {roles.map((role) => (
                     <option key={role._id} value={role._id}>

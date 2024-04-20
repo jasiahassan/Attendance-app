@@ -3,9 +3,27 @@ import LogOut from "../components/LogOut";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { url } from "../BaseUrl/Url";
+import { PulseLoader } from "react-spinners";
+import { FiEdit } from "react-icons/fi";
+import toast from "react-hot-toast";
 export default function Settings() {
   const [logout, setLogout] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [locationData, setLocationData] = useState({
+    latitude: "",
+    longitude: "",
+    distance: "",
+  });
+  const [passwordData, setPasswordData] = useState({
+    passwordCurrent: "",
+    password: "",
+    // confirmNewPassword: "",
+  });
+  const [id, setId] = useState("");
   const btnref = useRef();
+  const inputRef = useRef(null);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const closeDropDown = (e) => {
@@ -18,6 +36,97 @@ export default function Settings() {
     return () => document.body.removeEventListener("click", closeDropDown);
   }, []);
 
+  const getLocation = () => {
+    axios
+      .get(`${url}/location/getLocation`, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data.data.location);
+        setLocationData(resp.data.data.location[0]);
+        setId(resp.data.data.location[0]._id);
+      });
+  };
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    if (!isDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isDisabled]);
+
+  const postLocationData = () => {
+    axios
+      .patch(`${url}/location/updateLocation/${id}`, locationData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data);
+        setLocationData({
+          latitude: "",
+          longitude: "",
+          distance: "",
+        });
+        getLocation();
+        setIsDisabled(true);
+        toast.success("Location updated successfully");
+      })
+      .then((err) => {
+        console.log(err);
+        toast.error("Something went wrong");
+      });
+  };
+
+  const postPasswordData = () => {
+    axios
+      .patch(`${url}/users/UpdatePassword`, passwordData, {
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((resp) => {
+        console.log(resp.data);
+        setLoading(false);
+      });
+  };
+
+  const handleLocationChange = (e) => {
+    const { name, value } = e.target;
+    setLocationData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const handleLocationSubmit = (e) => {
+    e.preventDefault();
+    postLocationData();
+  };
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    postPasswordData();
+  };
+  const handleEdit = () => {
+    setIsDisabled(false);
+  };
+  // console.log(locationData);
   return (
     <div className="flex overflow-hidden h-screen">
       <SideBar />
@@ -41,52 +150,65 @@ export default function Settings() {
             </h1>
             <div className="w-full lg:grid grid-cols-2 gap-10">
               <div className="  mb-8 lg:mb-0">
-                <h1 className="text-2xl mb-4 font-medium">
-                  LOCATION CONTROL FORM
+                <h1 className="text-2xl mb-4 font-medium flex items-center gap-x-4">
+                  LOCATION CONTROL FORM{" "}
+                  {isDisabled && (
+                    <FiEdit className=" text-blue-500" onClick={handleEdit} />
+                  )}
                 </h1>
-                <form action="">
+                <form action="" onSubmit={handleLocationSubmit}>
                   <div className="grid grid-cols-1 gap-12 mb-8">
                     <div>
-                      <label htmlFor="" className="text-lg block">
+                      <label htmlFor="latitude" className="text-lg block">
                         Latitude
                       </label>
                       <input
                         type="text"
+                        name="latitude"
+                        value={locationData.latitude}
                         className="border-2 w-full xl:w-[20rem]  rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handleLocationChange}
+                        ref={inputRef}
+                        disabled={isDisabled}
                       />
                     </div>
                     <div>
-                      <label htmlFor="" className="text-lg block">
+                      <label htmlFor="longitude" className="text-lg block">
                         Longitude
                       </label>
                       <input
                         type="text"
+                        name="longitude"
+                        value={locationData.longitude}
                         className="border-2 w-full xl:w-[20rem]  rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handleLocationChange}
+                        disabled={isDisabled}
                       />
                     </div>
                     <div>
-                      <label htmlFor="" className="text-lg block">
+                      <label htmlFor="distance" className="text-lg block">
                         Distance(m)
                       </label>
                       <input
                         type="text"
+                        name="distance"
+                        value={locationData.distance}
                         className="border-2 w-full xl:w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handleLocationChange}
+                        disabled={isDisabled}
                       />
                     </div>
                   </div>
-                  <button className="bg-purple-500 rounded-full px-16 py-2 text-white text-lg font-medium hover:bg-purple-800">
-                    Submit
-                    {/* {loading ? (
-                      <PulseLoader color="white" size={8} />
-                    ) : (
-                      <p>Submit</p>
-                    )} */}
-                  </button>
+                  {isDisabled || (
+                    <button className="bg-purple-500 rounded-full px-16 py-2 text-white text-lg font-medium hover:bg-purple-800">
+                      Update
+                    </button>
+                  )}
                 </form>
               </div>
               <div className="">
                 <h1 className="text-2xl mb-4 font-medium">PASSWORD UPDATE</h1>
-                <form action="">
+                <form action="" onSubmit={handlePasswordSubmit}>
                   <div className="grid grid-cols-1 gap-12 mb-8">
                     <div>
                       <label htmlFor="" className="text-lg block">
@@ -94,7 +216,10 @@ export default function Settings() {
                       </label>
                       <input
                         type="text"
+                        name="passwordCurrent"
+                        value={passwordData.passwordCurrent}
                         className="border-2 w-full xl:w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handlePasswordChange}
                       />
                     </div>
                     <div>
@@ -103,20 +228,28 @@ export default function Settings() {
                       </label>
                       <input
                         type="text"
+                        name="password"
+                        value={passwordData.password}
                         className="border-2 w-full xl:w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handlePasswordChange}
                       />
                     </div>
-                    <div>
+                    {/* <div>
                       <label htmlFor="" className="text-lg block">
                         Confirm New Password
                       </label>
                       <input
                         type="text"
+                        name="confirmNewPassword"
+                        value={passwordData.confirmNewPassword}
                         className="border-2 w-full xl:w-[20rem] rounded-md py-2 px-3 focus:outline-purple-500"
+                        onChange={handlePasswordChange}
                       />
-                    </div>
+                    </div> */}
                   </div>
+
                   <button className="bg-purple-500 rounded-full px-16 py-2 text-white text-lg font-medium hover:bg-purple-800">
+                    {loading && <PulseLoader color="white" size={8} />}
                     Submit
                   </button>
                 </form>

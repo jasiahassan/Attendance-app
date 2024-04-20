@@ -1,37 +1,37 @@
 import { useRef, useState, useEffect } from "react";
 import SideBar from "../components/SideBar";
 import LogOut from "../components/LogOut";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { url } from "../BaseUrl/Url";
+import { ShimmerThumbnail } from "react-shimmer-effects";
+import axios from "axios";
+import { url } from "../BaseUrl/Url";
 export default function Dashboard() {
   const [logout, setLogout] = useState(false);
   const btnref = useRef();
-  // const token = localStorage.getItem("token");
-  // const [data, setData] = useState();
-  // useEffect(() => {
-  //   // console.log(token);
-  //   axios
-  //     .post(
-  //       `${url}/users/getAllUsers`,
-  //       {},
+  const token = localStorage.getItem("token");
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    // console.log(token);
+    axios
+      .get(
+        `${url}/users/getCount`,
 
-  //       {
-  //         headers: {
-  //           Authorization: "Bearer " + token,
-  //           "Content-Type": "application/json",
-  //           "User-Agent": navigator.userAgent,
-  //         },
-  //       }
-  //     )
-  //     .then((resp) => {
-  //       console.log(resp);
-  //       setData(resp.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, [token]);
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((resp) => {
+        setLoading(false);
+        console.log(resp.data.data);
+        setData(resp.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [token]);
   useEffect(() => {
     const closeDropDown = (e) => {
       // console.log(btnref.current);
@@ -60,21 +60,29 @@ export default function Dashboard() {
         </div>
         <div className="p-4 md:p-8 md:px-12 flex-grow">
           <div className="border shadow-xl rounded-xl p-4 md:p-8 md:px-12 h-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16 text-center">
-              {[
-                { count: "30", label: "Employees" },
-                { count: "03", label: "Managers" },
-                { count: "02", label: "Admins" },
-              ].map(({ count, label }) => (
-                <div
-                  key={label}
-                  className="border text-purple-500 shadow-xl rounded-md p-4 md:p-6"
-                >
-                  <h1 className="text-3xl md:text-4xl mb-2">{count}</h1>
-                  <p>{label}</p>
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16 text-center">
+                <ShimmerThumbnail height={150} rounded />{" "}
+                <ShimmerThumbnail height={150} rounded />{" "}
+                <ShimmerThumbnail height={150} rounded />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-16 text-center">
+                {[
+                  { count: data?.employeeCount, label: "Employees" },
+                  { count: data?.managerCount, label: "Managers" },
+                  { count: data?.adminCount, label: "Admins" },
+                ].map(({ count, label }) => (
+                  <div
+                    key={label}
+                    className="border text-purple-500 shadow-xl rounded-md p-4 md:p-6"
+                  >
+                    <h1 className="text-3xl md:text-4xl mb-2">{count}</h1>
+                    <p>{label}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

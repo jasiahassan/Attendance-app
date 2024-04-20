@@ -7,10 +7,12 @@ import axios from "axios";
 import { url } from "../BaseUrl/Url";
 import { MdDeleteOutline } from "react-icons/md";
 import toast from "react-hot-toast/headless";
+import { ShimmerTable } from "react-shimmer-effects";
 export default function ManageRoles() {
   const [logout, setLogout] = useState(false);
   const [roles, setRoles] = useState([]);
   const [newRole, setNewRole] = useState("");
+  const [isloading, setIsLoading] = useState(true);
   const btnref = useRef();
   const token = localStorage.getItem("token");
   const handleDropDown = () => {
@@ -28,6 +30,7 @@ export default function ManageRoles() {
       .then((resp) => {
         console.log(resp.data.data.roles);
         setRoles(resp.data.data.roles);
+        setIsLoading(false);
       });
   };
 
@@ -121,36 +124,42 @@ export default function ManageRoles() {
                 </button>
               </div>
               <div>
-                <h1 className="text-2xl font-medium mb-4">List of Roles</h1>
-                <table className="mb-4  w-full rounded-md ">
-                  <thead className="border text-left">
-                    <tr className="text-neutral-500 text-sm font-semibold">
-                      <th className="py-5 pl-10">S.NO</th>
-                      <th>ROLE TYPE</th>
-                      <th>ACTION</th>
-                    </tr>
-                  </thead>
-                  <tbody className="w-full text-neutral-800">
-                    {roles.map((item, i) => (
-                      <tr key={item?._id} className="border">
-                        <td className="py-5 pl-10 font-medium">{i + 1}</td>
-                        <td className="font-medium">{item?.role}</td>
-                        <td className="pl-2">
-                          <Link to={`/roles/updateRole/${item._id}`}>
-                            <FaUserEdit
-                              className="inline text-xl text-blue-500/70 cursor-pointer mr-2"
-                              //   onClick={() => handleEdit(item._id)}
-                            />
-                          </Link>
-                          <Link to={`/roles/deleteRole/${item._id}`}>
-                            {" "}
-                            <MdDeleteOutline className="text-xl text-red-500 inline" />
-                          </Link>
-                        </td>
+                <h1 className="text-3xl font-medium mb-4">List of Roles</h1>
+                {isloading ? (
+                  <div className="w-full">
+                    <ShimmerTable row={4} col={3} />;
+                  </div>
+                ) : (
+                  <table className="mb-4  w-full rounded-md ">
+                    <thead className="border text-left">
+                      <tr className="text-neutral-500 text-sm font-semibold">
+                        <th className="py-5 pl-10">S.NO</th>
+                        <th>ROLE TYPE</th>
+                        <th>ACTION</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody className="w-full text-neutral-800">
+                      {roles.map((item, i) => (
+                        <tr key={item?._id} className="border">
+                          <td className="py-5 pl-10 font-medium">{i + 1}</td>
+                          <td className="font-medium">{item?.role}</td>
+                          <td className="pl-2">
+                            <Link to={`/roles/updateRole/${item._id}`}>
+                              <FaUserEdit
+                                className="inline text-xl text-blue-500/70 cursor-pointer mr-2"
+                                //   onClick={() => handleEdit(item._id)}
+                              />
+                            </Link>
+                            <Link to={`/roles/deleteRole/${item._id}`}>
+                              {" "}
+                              <MdDeleteOutline className="text-xl text-red-500 inline" />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           </div>

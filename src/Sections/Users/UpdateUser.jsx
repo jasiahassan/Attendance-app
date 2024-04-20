@@ -223,7 +223,7 @@ export default function UpdateUser() {
                       onChange={handleChange}
                     >
                       <option value="" disabled selected>
-                        Select Role...
+                        --Select Role--
                       </option>
                       {roles.map((role) => {
                         return (

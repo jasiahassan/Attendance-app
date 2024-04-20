@@ -166,7 +166,7 @@ export default function AddUser() {
                       value: selectedRole,
                       type: "select",
                       options: [
-                        { value: "", label: "Select Role...", disabled: true },
+                        { value: "", label: "--Select Role--", disabled: true },
                         ...roles.map((role) => ({
                           value: role._id,
                           label: role.role,
