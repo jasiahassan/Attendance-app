@@ -15,7 +15,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
 
   const existingCheckin = await Attendance.findOne({
     userId: user._id,
-    in: {
+    checkinTime: {
       $gte: currentDate,
       $lte: endOfDay,
     },
@@ -24,7 +24,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
   if (!existingCheckin) {
     const newCheckin = new Attendance({
       userId: user._id,
-      in: Date.now(),
+      checkinTime: Date.now(),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -36,8 +36,8 @@ exports.checkin = catchAsync(async (req, res, next) => {
       },
     });
   }
-  if (!existingCheckin.out) {
-    existingCheckin.out = Date.now();
+  if (!existingCheckin.checkoutTime) {
+    existingCheckin.checkoutTime = Date.now();
     existingCheckin.updatedAt = Date.now();
     existingCheckin.save();
     return res.status(200).json({
@@ -48,7 +48,7 @@ exports.checkin = catchAsync(async (req, res, next) => {
     });
   }
 
-  if (existingCheckin.out) {
+  if (existingCheckin.checkoutTime) {
     return res.status(400).json({
       status: "error",
       message: "You have already checked out for today.",

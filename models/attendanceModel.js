@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const AttendanceSchema = new mongoose.Schema({
-  in: {
+  checkinTime: {
     type: Date,
   },
-  out: {
+  checkoutTime: {
     type: Date,
   },
   userId: {
