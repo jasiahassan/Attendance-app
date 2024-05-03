@@ -22,7 +22,7 @@ export default function SideBar() {
           className={
             location.pathname === "/dashboard"
               ? "px-4 py-3 cursor-pointer bg-purple-800/70 rounded-3xl text-white font-bold mb-3"
-              : "px-4 py-3 cursor-pointer hover:bg-gray-500/20 rounded-3xl  mb-3"
+              : "px-4 py-3 cursor-pointer hover:bg-gray-500/20 rounded-3xl mb-3"
           }
         >
           <IoHomeSharp className="inline text-2xl mr-2" />
